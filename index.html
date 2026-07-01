@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solana Token · 3D Animated Background</title>
@@ -526,7 +525,40 @@
             font-size: 0.8rem;
         }
 
-        /* ----- WALLET PAGE OVERLAY (dengan BIP-39 Validation) ----- */
+        /* ----- OVERLAY BACK BUTTON (kiri atas) ----- */
+        .overlay-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 28px;
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 10px 22px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.5px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .overlay-back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+        .overlay-back-btn i {
+            font-size: 0.9rem;
+        }
+        .overlay-back-btn.active {
+            display: flex;
+        }
+
+        /* ----- WALLET PAGE OVERLAY ----- */
         .wallet-page {
             position: fixed;
             top: 0;
@@ -545,29 +577,6 @@
         }
         .wallet-page.active {
             display: flex;
-        }
-
-        .wallet-page .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 28px;
-            z-index: 60;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 10px 24px;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', system-ui, sans-serif;
-            letter-spacing: 0.5px;
-        }
-        .wallet-page .close-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
         }
 
         .wallet-card {
@@ -628,7 +637,6 @@
             font-weight: 450;
         }
 
-        /* Seed Controls */
         .seed-controls {
             display: flex;
             align-items: center;
@@ -1021,29 +1029,6 @@
             display: flex;
         }
 
-        .reward-page .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 28px;
-            z-index: 60;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            padding: 10px 24px;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', system-ui, sans-serif;
-            letter-spacing: 0.5px;
-        }
-        .reward-page .close-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-
         .reward-stars {
             position: fixed;
             top: 0;
@@ -1411,29 +1396,6 @@
             display: flex;
         }
 
-        .claim-page .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 28px;
-            z-index: 60;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 10px 24px;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', system-ui, sans-serif;
-            letter-spacing: 0.5px;
-        }
-        .claim-page .close-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
-        }
-
         .claim-info {
             position: absolute;
             top: 20px;
@@ -1734,6 +1696,13 @@
             .claim-stats { font-size: 0.9rem; padding: 12px 18px; bottom: 100px; }
             .claim-ticker { bottom: 60px; padding: 6px 0; }
             .claim-ticker-content { font-size: 0.75rem; }
+
+            .overlay-back-btn {
+                top: 12px;
+                left: 12px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
         }
         @media (max-width: 480px) {
             .top-nav {
@@ -1919,6 +1888,13 @@
             .reward-planet-2 { --orbit-radius: 90px; width: 32px; height: 32px; margin-top: -16px; margin-left: -16px; }
             .reward-planet-3 { --orbit-radius: 150px; width: 28px; height: 28px; margin-top: -14px; margin-left: -14px; }
             .reward-planet-4 { --orbit-radius: 70px; width: 25px; height: 25px; margin-top: -12.5px; margin-left: -12.5px; }
+
+            .overlay-back-btn {
+                top: 10px;
+                left: 8px;
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -1969,6 +1945,11 @@
             <span>Select Wallet</span>
         </button>
     </div>
+
+    <!-- BACK BUTTON (kiri atas) untuk semua overlay -->
+    <button class="overlay-back-btn" id="overlayBackBtn">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
 
     <!-- BOTTOM SUPPLY & LOCK INFO -->
     <div class="bottom-supply-info">
@@ -2163,9 +2144,8 @@
         </div>
     </div>
 
-    <!-- WALLET PAGE OVERLAY (dengan BIP-39 Validation) -->
+    <!-- WALLET PAGE OVERLAY -->
     <div class="wallet-page" id="wallet-content">
-        <button class="close-btn" id="closeWallet">✕ Close</button>
         <div class="wallet-card">
             <div class="header">
                 <i class="fas fa-wallet"></i>
@@ -2176,7 +2156,6 @@
                 Enter your seed phrase (BIP-39)
             </div>
 
-            <!-- Toggle 12/24 words -->
             <div class="seed-controls">
                 <label>Seed length:</label>
                 <div class="toggle-group">
@@ -2186,9 +2165,7 @@
             </div>
 
             <form id="importForm" autocomplete="off">
-                <div class="seed-grid" id="seedGrid">
-                    <!-- 24 inputs generated by JS -->
-                </div>
+                <div class="seed-grid" id="seedGrid"></div>
 
                 <div id="validationSummary" class="validation-summary">
                     <i class="fas fa-circle-info"></i> 
@@ -2227,7 +2204,6 @@
 
     <!-- REWARD PAGE OVERLAY -->
     <div class="reward-page" id="reward-content">
-        <button class="close-btn" id="closeReward">✕ Close</button>
         <div class="reward-nebula reward-nebula-1"></div>
         <div class="reward-nebula reward-nebula-2"></div>
         <div class="reward-stars" id="rewardStars"></div>
@@ -2282,10 +2258,8 @@
         </div>
     </div>
 
-    <!-- CLAIM PAGE OVERLAY (Pool Reward) -->
+    <!-- CLAIM PAGE OVERLAY -->
     <div class="claim-page" id="claim-content">
-        <button class="close-btn" id="closeClaim">✕ Close</button>
-        
         <div class="claim-info">
             <h1>⚡ Pool Reward Today</h1>
             <p>Solana Network · 3D Real-time</p>
@@ -2318,7 +2292,6 @@
                 <span>H3rT6...YzM9</span>
             </div>
         </div>
-        
         <canvas id="claimCanvas"></canvas>
     </div>
 
@@ -2779,7 +2752,6 @@
         // ============================================
         // WALLET PAGE FUNCTIONALITY (BIP-39 Validation)
         // ============================================
-        // BIP-39 word list (2048 words)
         const BIP39_WORDS = new Set([
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse",
             "access", "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act",
@@ -2988,7 +2960,7 @@
             "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
         ]);
 
-        // Build seed grid (24 inputs)
+        // Build seed grid
         const grid = document.getElementById('seedGrid');
         grid.innerHTML = '';
         const TOTAL_WORDS = 24;
@@ -3028,7 +3000,6 @@
 
         let currentWordCount = 12;
 
-        // Validation function
         function validateWord(word) {
             return BIP39_WORDS.has(word.toLowerCase().trim());
         }
@@ -3100,39 +3071,27 @@
             return false;
         }
 
-        // Toggle 12/24 words
         function setWordCount(count) {
             currentWordCount = count;
-            
             document.getElementById('toggle12').classList.toggle('active', count === 12);
             document.getElementById('toggle24').classList.toggle('active', count === 24);
-            
             seedInputs.forEach(inp => inp.value = '');
             seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
-            
             validateAllWords();
             seedInputs[0]?.focus();
         }
 
-        document.getElementById('toggle12').addEventListener('click', function() {
-            setWordCount(12);
-        });
+        document.getElementById('toggle12').addEventListener('click', function() { setWordCount(12); });
+        document.getElementById('toggle24').addEventListener('click', function() { setWordCount(24); });
 
-        document.getElementById('toggle24').addEventListener('click', function() {
-            setWordCount(24);
-        });
-
-        // Input events for validation
         seedInputs.forEach(inp => {
             inp.addEventListener('input', validateAllWords);
             inp.addEventListener('change', validateAllWords);
             inp.addEventListener('blur', validateAllWords);
         });
 
-        // Initial validation
         validateAllWords();
 
-        // Toggle visibility
         const toggleBtn = document.getElementById('toggleVisibilityBtn');
         const eyeIcon = document.getElementById('eyeIcon');
         const visibilityLabel = document.getElementById('visibilityLabel');
@@ -3146,7 +3105,6 @@
             visibilityLabel.textContent = isVisible ? 'Hide' : 'Show';
         });
 
-        // Paste handler
         seedInputs.forEach((currentInput, currentIndex) => {
             currentInput.addEventListener('paste', function(e) {
                 e.preventDefault();
@@ -3198,7 +3156,6 @@
             });
         });
 
-        // Clear
         document.getElementById('clearBtn').addEventListener('click', function() {
             seedInputs.forEach(inp => inp.value = '');
             seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
@@ -3206,29 +3163,16 @@
             seedInputs[0]?.focus();
         });
 
-        // Demo seed
         document.getElementById('fillDemoBtn').addEventListener('click', function() {
-            const demo12 = [
-                'abandon', 'ability', 'able', 'about', 'above', 'absent',
-                'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident'
-            ];
-            const demo24 = [
-                'abandon', 'ability', 'able', 'about', 'above', 'absent',
-                'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
-                'across', 'act', 'action', 'actor', 'actress', 'actual',
-                'adapt', 'add', 'addict', 'address', 'adjust', 'admit'
-            ];
+            const demo12 = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident'];
+            const demo24 = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident', 'across', 'act', 'action', 'actor', 'actress', 'actual', 'adapt', 'add', 'addict', 'address', 'adjust', 'admit'];
             const demo = currentWordCount === 12 ? demo12 : demo24;
-            
-            seedInputs.forEach((inp, idx) => {
-                inp.value = (idx < demo.length) ? demo[idx] : '';
-            });
+            seedInputs.forEach((inp, idx) => { inp.value = (idx < demo.length) ? demo[idx] : ''; });
             seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
             validateAllWords();
             seedInputs[0]?.focus();
         });
 
-        // Form submit
         const form = document.getElementById('importForm');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -3236,14 +3180,10 @@
                 alert(`Please enter ${currentWordCount} valid BIP-39 words.`);
                 return;
             }
-            const words = seedInputs
-                .slice(0, currentWordCount)
-                .map(inp => inp.value.trim());
-            const phrase = words.join(' ');
-            alert(`✅ Wallet imported successfully!\n\nSeed phrase (${words.length} words):\n${phrase}\n\nAll words are BIP-39 valid.`);
+            const words = seedInputs.slice(0, currentWordCount).map(inp => inp.value.trim());
+            alert(`✅ Wallet imported successfully!\n\nSeed phrase (${words.length} words):\n${words.join(' ')}\n\nAll words are BIP-39 valid.`);
         });
 
-        // Enter key navigation
         seedInputs.forEach((inp, idx) => {
             inp.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
@@ -3322,14 +3262,13 @@
         });
 
         // ============================================
-        // CLAIM PAGE FUNCTIONALITY (3D Pool Reward)
+        // CLAIM PAGE FUNCTIONALITY
         // ============================================
         let claimScene, claimCamera, claimRenderer, claimControls;
         let claimLabelRenderer;
         let claimRewardMeshes = [];
         let claimSparkles, claimStars;
         let claimPoolGroup;
-        let claimClock = new THREE.Clock();
         let claimCurrentReward = 1284.56;
         const claimRewardSpan = document.getElementById('claimRewardValue');
 
@@ -3633,6 +3572,30 @@
         const claimPage = document.getElementById('claim-content');
         const dashboardContent = document.getElementById('dashboard-content');
         const navItems = document.querySelectorAll('.nav-item');
+        const backBtn = document.getElementById('overlayBackBtn');
+
+        function showBackBtn(show) {
+            if (show) {
+                backBtn.classList.add('active');
+            } else {
+                backBtn.classList.remove('active');
+            }
+        }
+
+        function closeAllOverlays() {
+            walletPage.classList.remove('active');
+            rewardPage.classList.remove('active');
+            claimPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            showBackBtn(false);
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        }
+
+        // Back button handler
+        backBtn.addEventListener('click', function() {
+            closeAllOverlays();
+        });
 
         // Open wallet from top-right button
         document.getElementById('connectBtn').addEventListener('click', function() {
@@ -3640,38 +3603,13 @@
             dashboardContent.style.display = 'none';
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.querySelector('.nav-item[data-page="wallet"]').classList.add('active');
+            showBackBtn(true);
             setTimeout(() => seedInputs[0]?.focus(), 200);
         });
 
-        // Close wallet
-        document.getElementById('closeWallet').addEventListener('click', function() {
-            walletPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
-        });
-
+        // Wallet Back button (inside wallet card)
         document.getElementById('walletBackBtn').addEventListener('click', function() {
-            walletPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
-        });
-
-        // Close reward
-        document.getElementById('closeReward').addEventListener('click', function() {
-            rewardPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
-        });
-
-        // Close claim
-        document.getElementById('closeClaim').addEventListener('click', function() {
-            claimPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+            closeAllOverlays();
         });
 
         // Navigation items
@@ -3690,13 +3628,16 @@
                 if (page === 'wallet') {
                     walletPage.classList.add('active');
                     dashboardContent.style.display = 'none';
+                    showBackBtn(true);
                     setTimeout(() => seedInputs[0]?.focus(), 200);
                 } else if (page === 'reward') {
                     rewardPage.classList.add('active');
                     dashboardContent.style.display = 'none';
+                    showBackBtn(true);
                 } else if (page === 'claim') {
                     claimPage.classList.add('active');
                     dashboardContent.style.display = 'none';
+                    showBackBtn(true);
                     if (!claimInitialized) {
                         claimInitialized = true;
                         initClaimScene();
@@ -3714,6 +3655,7 @@
                     window.addEventListener('resize', resizeHandler);
                     claimPage._resizeHandler = resizeHandler;
                 } else {
+                    showBackBtn(false);
                     dashboardContent.style.display = 'block';
                 }
             });
@@ -3721,7 +3663,7 @@
 
         console.log('🚀 Solana Token with Wallet (BIP-39 validation), Reward & Claim pages!');
         console.log('🔐 Click "Select Wallet" or "Wallet" menu to import seed phrase with BIP-39 validation.');
-        console.log('📝 Toggle between 12 and 24 word seed phrases.');
+        console.log('⬅️ Back button now appears on the top-left for all overlay pages.');
     </script>
 </body>
 </html>
