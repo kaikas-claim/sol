@@ -1,0 +1,2706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Token · 3D Animated Background</title>
+    <!-- Favicon / Logo Browser -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 397.7 311.7'%3E%3Cpath d='M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z' fill='%239945FF'/%3E%3Cpath d='M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1L333.1 73.8c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z' fill='%2314F195'/%3E%3Cpath d='M333.1 120.5c2.4-2.4 5.7-3.8 9.2-3.8H397.7c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7c2.4-2.4 5.7-3.8 9.2-3.8h317.4z' fill='%239945FF'/%3E%3C/svg%3E">
+    <!-- Font Awesome for Wallet Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background-color: #0b0f1a;
+            overflow: hidden;
+            color: #fff;
+            height: 100vh;
+            width: 100vw;
+        }
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* ----- overlay gradasi untuk kedalaman ----- */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(20, 60, 120, 0.25) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 200, 255, 0.10) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ----- TOP NAVIGATION MENU ----- */
+        .top-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            background: rgba(8, 18, 38, 0.5);
+            backdrop-filter: blur(14px) saturate(1.3);
+            -webkit-backdrop-filter: blur(14px) saturate(1.3);
+            border: 1px solid rgba(130, 200, 255, 0.12);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+        .top-nav .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-right: 14px;
+            border-right: 1px solid rgba(130, 200, 255, 0.1);
+            margin-right: 6px;
+        }
+        .top-nav .nav-brand svg {
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 0 12px rgba(70, 150, 255, 0.2));
+        }
+        .top-nav .nav-brand span {
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #b0daff, #7aa9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        .top-nav .nav-item {
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(200, 225, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            border: none;
+            background: transparent;
+            font-family: 'Inter', system-ui, sans-serif;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .top-nav .nav-item:hover {
+            color: #fff;
+            background: rgba(130, 200, 255, 0.08);
+        }
+        .top-nav .nav-item.active {
+            color: #fff;
+            background: rgba(130, 200, 255, 0.12);
+            box-shadow: 0 0 20px rgba(70, 150, 255, 0.05);
+        }
+
+        /* ----- SELECT WALLET (atas kanan) ----- */
+        .connect-wallet {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 30;
+            pointer-events: auto;
+        }
+        .connect-wallet button {
+            background: rgba(8, 18, 38, 0.5);
+            backdrop-filter: blur(12px) saturate(1.3);
+            -webkit-backdrop-filter: blur(12px) saturate(1.3);
+            border: 1px solid rgba(130, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #c0ddff;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .connect-wallet button:hover {
+            background: rgba(30, 70, 140, 0.4);
+            border-color: rgba(130, 200, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 80, 200, 0.15);
+        }
+        .connect-wallet button .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            display: inline-block;
+            animation: pulse-dot 2s infinite;
+        }
+        .connect-wallet button .wallet-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ----- BOTTOM SUPPLY & LOCK INFO ----- */
+        .bottom-supply-info {
+            position: fixed;
+            bottom: 130px;
+            right: 40px;
+            z-index: 26;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: rgba(8, 18, 38, 0.4);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid rgba(130, 200, 255, 0.08);
+            border-radius: 30px;
+            padding: 10px 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .bottom-supply-info .info-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(130, 200, 255, 0.08);
+            flex-shrink: 0;
+        }
+        .bottom-supply-info .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .bottom-supply-info .info-item .info-label {
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(180, 210, 255, 0.3);
+            font-weight: 400;
+        }
+        .bottom-supply-info .info-item .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #c8ddff;
+            margin-top: 1px;
+        }
+        .bottom-supply-info .info-item .info-value .highlight {
+            color: #88ddff;
+        }
+        .bottom-supply-info .info-item .info-value .highlight-green {
+            color: #4ade80;
+        }
+        .bottom-supply-info .info-item .info-value .highlight-gold {
+            color: #fbbf24;
+        }
+
+        /* ----- BOTTOM TICKER / MARQUEE ----- */
+        .ticker-wrapper {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 25;
+            background: rgba(8, 18, 38, 0.4);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid rgba(130, 200, 255, 0.08);
+            border-radius: 50px;
+            padding: 10px 24px;
+            max-width: 85%;
+            width: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .ticker-wrapper .ticker-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            animation: ticker-scroll 35s linear infinite;
+            white-space: nowrap;
+            width: max-content;
+        }
+        .ticker-wrapper .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: rgba(200, 225, 255, 0.7);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        .ticker-wrapper .ticker-item .ticker-icon {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            flex-shrink: 0;
+        }
+        .ticker-wrapper .ticker-item .ticker-icon.blue {
+            background: #38bdf8;
+        }
+        .ticker-wrapper .ticker-item .ticker-icon.purple {
+            background: #a78bfa;
+        }
+        .ticker-wrapper .ticker-item .ticker-icon.gold {
+            background: #fbbf24;
+        }
+        .ticker-wrapper .ticker-item .highlight {
+            color: #88ddff;
+            font-weight: 500;
+        }
+        .ticker-wrapper .ticker-item .highlight-green {
+            color: #4ade80;
+            font-weight: 500;
+        }
+        .ticker-wrapper .ticker-item .separator {
+            color: rgba(130, 200, 255, 0.15);
+            font-weight: 300;
+        }
+
+        @keyframes ticker-scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ----- COPYRIGHT (di bawah) ----- */
+        .copyright {
+            position: fixed;
+            bottom: 28px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            font-weight: 300;
+            font-size: 12px;
+            color: rgba(180, 210, 255, 0.25);
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .copyright span {
+            display: inline-block;
+            background: rgba(8, 16, 32, 0.3);
+            padding: 6px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(130, 200, 255, 0.05);
+            backdrop-filter: blur(4px);
+        }
+        .copyright .heart {
+            color: #f87171;
+            display: inline-block;
+            animation: heart-pulse 2s infinite;
+        }
+        @keyframes heart-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* ----- TOKEN CARD ----- */
+        .token-card {
+            position: fixed;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: rgba(8, 18, 38, 0.55);
+            backdrop-filter: blur(14px) saturate(1.2);
+            -webkit-backdrop-filter: blur(14px) saturate(1.2);
+            border: 1px solid rgba(130, 200, 255, 0.18);
+            border-radius: 40px;
+            padding: 2rem 2.6rem 1.8rem;
+            max-width: 460px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(100, 200, 255, 0.05) inset;
+            text-align: left;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            max-height: 70vh;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .token-card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .token-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .token-card::-webkit-scrollbar-thumb {
+            background: rgba(130, 200, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .token-card .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 0.2rem;
+        }
+        .token-card .logo-row .astronaut-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1a3a6a, #0b0f1a);
+            border: 2px solid rgba(130, 200, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 30px rgba(70, 150, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .token-card .logo-row .astronaut-logo svg {
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 0 10px rgba(70, 150, 255, 0.3));
+        }
+        .token-card .logo-row .astronaut-logo .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1.5px solid rgba(130, 200, 255, 0.15);
+            animation: spin-ring 8s linear infinite;
+        }
+        .token-card .logo-row .astronaut-logo .ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            animation-duration: 6s;
+            animation-direction: reverse;
+            border-color: rgba(130, 200, 255, 0.08);
+        }
+        @keyframes spin-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .token-card h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #b0daff 0%, #7aa9ff 50%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(70, 150, 255, 0.15);
+            line-height: 1.2;
+        }
+        .token-card .subhead {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(180, 210, 255, 0.5);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(130, 200, 255, 0.08);
+            padding-bottom: 0.7rem;
+            font-weight: 400;
+        }
+        .token-card .subhead span {
+            color: #88ddff;
+            font-weight: 500;
+        }
+
+        .token-card .description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(210, 230, 255, 0.85);
+            font-weight: 300;
+            letter-spacing: 0.2px;
+            margin-bottom: 1.2rem;
+        }
+        .token-card .description strong {
+            color: #aac8ff;
+            font-weight: 500;
+        }
+
+        /* ----- TOKEN STATS ----- */
+        .token-stats {
+            display: flex;
+            justify-content: flex-start;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(130, 200, 255, 0.08);
+            padding-top: 0.8rem;
+            margin-top: 0.2rem;
+            margin-bottom: 1rem;
+        }
+        .token-stats div {
+            display: flex;
+            flex-direction: column;
+        }
+        .token-stats .label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(180, 210, 255, 0.4);
+        }
+        .token-stats .value {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #c0ddff;
+            letter-spacing: 0.5px;
+        }
+        .token-stats .value small {
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: rgba(160, 200, 255, 0.5);
+            margin-left: 4px;
+        }
+
+        /* ----- SOCIAL LINKS (Twitter & Telegram - tanpa handle) ----- */
+        .social-links {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(130, 200, 255, 0.06);
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 225, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(130, 200, 255, 0.08);
+            transition: all 0.25s ease;
+            backdrop-filter: blur(2px);
+            pointer-events: auto;
+        }
+        .social-links a:hover {
+            background: rgba(130, 200, 255, 0.08);
+            border-color: rgba(130, 200, 255, 0.25);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 100, 255, 0.15);
+        }
+        .social-links a svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            transition: fill 0.2s;
+        }
+        .social-links a .label {
+            font-size: 0.8rem;
+        }
+
+        /* ----- WALLET PAGE OVERLAY (Import Wallet) ----- */
+        .wallet-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            background: rgba(11, 15, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        .wallet-page.active {
+            display: flex;
+        }
+
+        .wallet-page .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 10px 24px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .wallet-page .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .wallet-card {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 2.5rem 2.8rem 3rem;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5),
+                        0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 500px) {
+            .wallet-card {
+                padding: 2rem 1.5rem;
+                border-radius: 32px;
+            }
+        }
+
+        .wallet-card .header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-card .header i {
+            font-size: 2.1rem;
+            color: #88ddff;
+            background: rgba(26, 92, 255, 0.10);
+            padding: 0.5rem;
+            border-radius: 18px;
+            line-height: 1;
+        }
+
+        .wallet-card .header h2 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #b0daff, #7aa9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wallet-card .subhead-wallet {
+            font-size: 0.95rem;
+            color: rgba(180, 210, 255, 0.6);
+            margin-top: -0.2rem;
+            margin-bottom: 2rem;
+            padding-left: 0.25rem;
+            border-left: 3px solid #1a5cff;
+            padding-left: 1rem;
+            font-weight: 450;
+        }
+
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.9rem 1rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .seed-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        .seed-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 0.2rem 0.2rem 0.2rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .seed-item:focus-within {
+            border-color: #1a5cff;
+            box-shadow: 0 0 0 3px rgba(26, 92, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .seed-index {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(180, 210, 255, 0.4);
+            letter-spacing: 0.02em;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            margin-right: 0.5rem;
+            min-width: 28px;
+            text-align: center;
+            line-height: 1.4;
+            flex-shrink: 0;
+        }
+
+        .seed-item input {
+            border: none;
+            background: transparent;
+            padding: 0.75rem 0.25rem 0.75rem 0;
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+            color: #c8ddff;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .seed-item input::placeholder {
+            color: rgba(180, 210, 255, 0.25);
+            font-weight: 400;
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+        }
+
+        .wallet-card .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.8rem;
+        }
+
+        .wallet-card .action-group .left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-visibility {
+            background: none;
+            border: none;
+            color: rgba(180, 210, 255, 0.5);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .toggle-visibility i {
+            font-size: 1rem;
+        }
+
+        .toggle-visibility:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #b0d8ff;
+        }
+
+        .wallet-card .btn-group-right {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            flex: 1 1 auto;
+            justify-content: flex-end;
+        }
+
+        .wallet-back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.85rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .wallet-back-btn i {
+            font-size: 1.1rem;
+        }
+
+        .wallet-back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .wallet-import-btn {
+            background: #1a5cff;
+            border: none;
+            padding: 0.85rem 2.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 18px -6px rgba(26, 92, 255, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .wallet-import-btn i {
+            font-size: 1.1rem;
+        }
+
+        .wallet-import-btn:hover {
+            background: #0a4ad0;
+            transform: scale(0.98);
+            box-shadow: 0 6px 14px -4px rgba(26, 92, 255, 0.4);
+        }
+
+        .wallet-card .extra-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .wallet-card .extra-actions button {
+            background: transparent;
+            border: none;
+            color: rgba(180, 210, 255, 0.4);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            border-radius: 30px;
+            transition: 0.1s;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .wallet-card .extra-actions button i {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .wallet-card .extra-actions button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .wallet-card .footnote {
+            margin-top: 1.8rem;
+            font-size: 0.8rem;
+            color: rgba(180, 210, 255, 0.25);
+            text-align: center;
+            letter-spacing: 0.2px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.04);
+            padding-top: 1.5rem;
+        }
+
+        .wallet-card .footnote i {
+            margin-right: 6px;
+            opacity: 0.6;
+        }
+
+        .seed-item.paste-highlight {
+            animation: pasteFlash 0.4s ease;
+        }
+
+        @keyframes pasteFlash {
+            0% { background-color: rgba(26, 92, 255, 0.15); border-color: #1a5cff; }
+            50% { background-color: rgba(26, 92, 255, 0.25); }
+            100% { background-color: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.08); }
+        }
+
+        @media (max-width: 550px) {
+            .wallet-card .btn-group-right {
+                flex-direction: column;
+                width: 100%;
+            }
+            .wallet-back-btn, .wallet-import-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* --- REWARD PAGE OVERLAY --- */
+        .reward-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            background: radial-gradient(ellipse at center, #0a0a2e, #000000);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+            overflow: hidden;
+        }
+        .reward-page.active {
+            display: flex;
+        }
+
+        .reward-page .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 24px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .reward-page .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Reward Page Stars */
+        .reward-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 51;
+        }
+        .reward-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle-star var(--duration) ease-in-out infinite alternate;
+        }
+        @keyframes twinkle-star {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Reward Page Nebula */
+        .reward-nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 51;
+            opacity: 0.3;
+        }
+        .reward-nebula-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+            background: radial-gradient(circle, #9945FF, transparent 70%);
+            animation: nebulaFloat 30s ease-in-out infinite alternate;
+        }
+        .reward-nebula-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            left: -150px;
+            background: radial-gradient(circle, #14F195, transparent 70%);
+            animation: nebulaFloat 25s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes nebulaFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.2); }
+        }
+
+        /* Reward Orbiting Planets */
+        .reward-planets-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 51;
+        }
+        .reward-planet {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: inset -10px -10px 30px rgba(0,0,0,0.5);
+            animation: rewardPlanetOrbit var(--orbit-duration) linear infinite;
+        }
+        .reward-planet::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 20%;
+            height: 20%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            filter: blur(5px);
+        }
+        @keyframes rewardPlanetOrbit {
+            0% { transform: rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg); }
+        }
+
+        .reward-planet-1 {
+            width: 70px;
+            height: 70px;
+            top: 50%;
+            left: 50%;
+            margin-top: -35px;
+            margin-left: -35px;
+            background: radial-gradient(ellipse at 30% 30%, #e8c99b, #8b6b3d);
+            box-shadow: 0 0 50px rgba(232, 201, 155, 0.3);
+            --orbit-radius: 280px;
+            --orbit-duration: 20s;
+        }
+        .reward-planet-1::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 100%;
+            height: 15%;
+            background: rgba(139, 107, 61, 0.5);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .reward-planet-2 {
+            width: 55px;
+            height: 55px;
+            top: 50%;
+            left: 50%;
+            margin-top: -27.5px;
+            margin-left: -27.5px;
+            background: radial-gradient(ellipse at 40% 30%, #d4a373, #a67c52);
+            box-shadow: 0 0 40px rgba(212, 163, 115, 0.3);
+            --orbit-radius: 200px;
+            --orbit-duration: 15s;
+            animation-direction: reverse;
+        }
+        .reward-planet-2::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(70deg);
+            width: 100px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(212, 163, 115, 0.3);
+            border: 2px solid rgba(212, 163, 115, 0.2);
+            filter: blur(1px);
+        }
+
+        .reward-planet-3 {
+            width: 45px;
+            height: 45px;
+            top: 50%;
+            left: 50%;
+            margin-top: -22.5px;
+            margin-left: -22.5px;
+            background: radial-gradient(ellipse at 30% 30%, #4a9eff, #1a5f8a);
+            box-shadow: 0 0 40px rgba(74, 158, 255, 0.3);
+            --orbit-radius: 340px;
+            --orbit-duration: 25s;
+        }
+
+        .reward-planet-4 {
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            margin-top: -20px;
+            margin-left: -20px;
+            background: radial-gradient(ellipse at 40% 30%, #e07050, #8b3a2a);
+            box-shadow: 0 0 35px rgba(224, 112, 80, 0.3);
+            --orbit-radius: 150px;
+            --orbit-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        /* Reward Token 3D */
+        .reward-token-wrapper {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            animation: float-reward 3s ease-in-out infinite;
+            z-index: 52;
+        }
+        @keyframes float-reward {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-20px) rotateX(5deg); }
+        }
+
+        .reward-token-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate-reward 12s linear infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .reward-token-3d:hover {
+            animation-play-state: paused;
+            transform: scale(1.05) rotateY(45deg);
+        }
+        @keyframes rotate-reward {
+            0% { transform: rotateY(0deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(10deg); }
+        }
+
+        .reward-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
+        }
+        .reward-face-front {
+            background: radial-gradient(circle at 30% 30%, #9945FF, #14F195);
+            transform: translateZ(45px);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        .reward-face-back {
+            background: radial-gradient(circle at 70% 70%, #14F195, #9945FF);
+            transform: rotateY(180deg) translateZ(45px);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .reward-side {
+            position: absolute;
+            width: 90px;
+            height: 280px;
+            background: linear-gradient(180deg, #9945FF, #14F195);
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .reward-side-left {
+            transform: rotateY(-90deg) translateZ(90px);
+            background: linear-gradient(180deg, #7a35cc, #10d485);
+        }
+        .reward-side-right {
+            transform: rotateY(90deg) translateZ(90px);
+            background: linear-gradient(180deg, #10d485, #7a35cc);
+        }
+        .reward-side-top {
+            transform: rotateX(90deg) translateZ(90px);
+            width: 280px;
+            height: 90px;
+            background: radial-gradient(circle at center, #14F195, #9945FF);
+        }
+        .reward-side-bottom {
+            transform: rotateX(-90deg) translateZ(90px);
+            width: 280px;
+            height: 90px;
+            background: radial-gradient(circle at center, #9945FF, #14F195);
+        }
+
+        .reward-token-content {
+            text-align: center;
+            z-index: 10;
+        }
+        .reward-solana-logo {
+            font-size: 70px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(20, 241, 149, 0.5);
+            line-height: 1;
+        }
+        .reward-solana-sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        .reward-badge-token {
+            background: rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid gold;
+            border-radius: 20px;
+            padding: 6px 18px;
+            margin-top: 12px;
+            color: gold;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            animation: pulse-reward 2s ease-in-out infinite;
+        }
+        @keyframes pulse-reward {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 0.4); }
+        }
+
+        .reward-info-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 52;
+        }
+        .reward-info-panel h2 {
+            font-size: 24px;
+            background: linear-gradient(90deg, #9945FF, #14F195);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .reward-info-panel p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        .reward-stats-panel {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .reward-stat-item {
+            text-align: center;
+        }
+        .reward-stat-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #14F195;
+            display: block;
+        }
+        .reward-stat-item .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .reward-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 52;
+        }
+        .reward-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #14F195;
+            border-radius: 50%;
+            animation: particleFloatReward 6s ease-in-out infinite;
+            box-shadow: 0 0 10px #14F195;
+        }
+        @keyframes particleFloatReward {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { transform: translateY(-100px) scale(1); opacity: 1; }
+            100% { transform: translateY(-200px) scale(0); opacity: 0; }
+        }
+
+        /* responsif */
+        @media (max-width: 768px) {
+            .top-nav {
+                top: 12px;
+                padding: 6px 12px;
+                border-radius: 30px;
+                gap: 4px;
+                width: auto;
+                max-width: 95%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .top-nav .nav-brand span {
+                font-size: 0.7rem;
+            }
+            .top-nav .nav-brand svg {
+                width: 22px;
+                height: 22px;
+            }
+            .top-nav .nav-brand {
+                padding-right: 10px;
+                margin-right: 4px;
+            }
+            .top-nav .nav-item {
+                font-size: 0.65rem;
+                padding: 4px 12px;
+            }
+
+            .connect-wallet {
+                top: 12px;
+                right: 12px;
+            }
+            .connect-wallet button {
+                padding: 5px 12px;
+                font-size: 0.65rem;
+                gap: 5px;
+            }
+            .connect-wallet button .dot {
+                width: 5px;
+                height: 5px;
+            }
+
+            .bottom-supply-info {
+                bottom: 120px;
+                right: 50%;
+                transform: translateX(50%);
+                padding: 8px 16px;
+                border-radius: 24px;
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+                max-width: 95%;
+            }
+            .bottom-supply-info .info-item .info-value {
+                font-size: 0.75rem;
+            }
+            .bottom-supply-info .info-item .info-label {
+                font-size: 0.4rem;
+            }
+            .bottom-supply-info .info-divider {
+                height: 20px;
+            }
+
+            .ticker-wrapper {
+                bottom: 70px;
+                padding: 8px 16px;
+                border-radius: 30px;
+                max-width: 95%;
+            }
+            .ticker-wrapper .ticker-item {
+                font-size: 0.7rem;
+                gap: 8px;
+            }
+            .ticker-wrapper .ticker-content {
+                gap: 24px;
+                animation-duration: 25s;
+            }
+
+            .copyright {
+                font-size: 10px;
+                bottom: 16px;
+            }
+            .copyright span {
+                padding: 4px 14px;
+            }
+
+            .token-card {
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 1.6rem 1.2rem;
+                border-radius: 28px;
+                max-width: 95%;
+                text-align: center;
+                max-height: 55vh;
+                margin-top: 50px;
+            }
+            .token-card .logo-row {
+                justify-content: center;
+            }
+            .token-stats {
+                justify-content: center;
+                gap: 1.2rem;
+            }
+            .social-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+            }
+            .token-card h1 {
+                font-size: 2rem;
+            }
+            .token-card .logo-row .astronaut-logo {
+                width: 40px;
+                height: 40px;
+            }
+            .token-card .logo-row .astronaut-logo svg {
+                width: 26px;
+                height: 26px;
+            }
+            .social-links a {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+            }
+
+            .wallet-card {
+                padding: 1.5rem 1.2rem;
+            }
+            .wallet-card .header h2 {
+                font-size: 1.5rem;
+            }
+            .wallet-card .header i {
+                font-size: 1.6rem;
+            }
+
+            .reward-token-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .reward-face-front, .reward-face-back {
+                transform: translateZ(30px);
+            }
+            .reward-face-back {
+                transform: rotateY(180deg) translateZ(30px);
+            }
+            .reward-side-left {
+                transform: rotateY(-90deg) translateZ(70px);
+                height: 200px;
+                width: 60px;
+            }
+            .reward-side-right {
+                transform: rotateY(90deg) translateZ(70px);
+                height: 200px;
+                width: 60px;
+            }
+            .reward-side-top {
+                transform: rotateX(90deg) translateZ(70px);
+                width: 200px;
+                height: 60px;
+            }
+            .reward-side-bottom {
+                transform: rotateX(-90deg) translateZ(70px);
+                width: 200px;
+                height: 60px;
+            }
+            .reward-solana-logo {
+                font-size: 50px;
+            }
+            .reward-info-panel {
+                padding: 15px 20px;
+                margin: 0 20px;
+            }
+            .reward-stats-panel {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .reward-planet-1 { --orbit-radius: 160px; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px; }
+            .reward-planet-2 { --orbit-radius: 120px; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px; }
+            .reward-planet-3 { --orbit-radius: 200px; width: 35px; height: 35px; margin-top: -17.5px; margin-left: -17.5px; }
+            .reward-planet-4 { --orbit-radius: 90px; width: 30px; height: 30px; margin-top: -15px; margin-left: -15px; }
+        }
+        @media (max-width: 480px) {
+            .top-nav {
+                top: 10px;
+                padding: 4px 10px;
+                border-radius: 24px;
+                gap: 2px;
+            }
+            .top-nav .nav-brand span {
+                font-size: 0.6rem;
+            }
+            .top-nav .nav-brand svg {
+                width: 18px;
+                height: 18px;
+            }
+            .top-nav .nav-brand {
+                padding-right: 6px;
+                margin-right: 2px;
+            }
+            .top-nav .nav-item {
+                font-size: 0.55rem;
+                padding: 3px 8px;
+            }
+
+            .connect-wallet {
+                top: 10px;
+                right: 8px;
+            }
+            .connect-wallet button {
+                padding: 4px 10px;
+                font-size: 0.55rem;
+                gap: 4px;
+            }
+            .connect-wallet button .dot {
+                width: 4px;
+                height: 4px;
+            }
+            .connect-wallet button .wallet-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .bottom-supply-info {
+                bottom: 110px;
+                right: 50%;
+                transform: translateX(50%);
+                padding: 6px 12px;
+                border-radius: 20px;
+                gap: 10px;
+                max-width: 98%;
+            }
+            .bottom-supply-info .info-item .info-value {
+                font-size: 0.65rem;
+            }
+            .bottom-supply-info .info-item .info-label {
+                font-size: 0.35rem;
+            }
+            .bottom-supply-info .info-divider {
+                height: 16px;
+            }
+
+            .ticker-wrapper {
+                bottom: 60px;
+                padding: 6px 12px;
+                border-radius: 20px;
+            }
+            .ticker-wrapper .ticker-item {
+                font-size: 0.6rem;
+                gap: 6px;
+            }
+            .ticker-wrapper .ticker-content {
+                gap: 16px;
+                animation-duration: 20s;
+            }
+
+            .copyright {
+                font-size: 8px;
+                bottom: 12px;
+            }
+            .copyright span {
+                padding: 3px 10px;
+            }
+
+            .token-card {
+                padding: 1rem 0.8rem;
+                border-radius: 20px;
+                max-width: 98%;
+                max-height: 50vh;
+                margin-top: 40px;
+            }
+            .token-card h1 {
+                font-size: 1.5rem;
+            }
+            .token-card .description {
+                font-size: 0.8rem;
+            }
+            .token-stats .value {
+                font-size: 0.9rem;
+            }
+            .token-card .logo-row .astronaut-logo {
+                width: 34px;
+                height: 34px;
+            }
+            .token-card .logo-row .astronaut-logo svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .wallet-card {
+                padding: 1rem 0.8rem;
+                border-radius: 24px;
+            }
+            .wallet-card .header h2 {
+                font-size: 1.2rem;
+            }
+            .wallet-card .header i {
+                font-size: 1.3rem;
+                padding: 0.3rem;
+            }
+            .seed-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            .seed-item input {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.1rem 0.5rem 0;
+            }
+            .seed-index {
+                font-size: 0.6rem;
+                min-width: 22px;
+                padding: 0.1rem 0.4rem;
+            }
+            .wallet-import-btn, .wallet-back-btn {
+                font-size: 0.85rem;
+                padding: 0.7rem 1.5rem;
+            }
+
+            .reward-token-wrapper {
+                width: 160px;
+                height: 160px;
+            }
+            .reward-face-front, .reward-face-back {
+                transform: translateZ(25px);
+            }
+            .reward-face-back {
+                transform: rotateY(180deg) translateZ(25px);
+            }
+            .reward-side-left {
+                transform: rotateY(-90deg) translateZ(55px);
+                height: 160px;
+                width: 50px;
+            }
+            .reward-side-right {
+                transform: rotateY(90deg) translateZ(55px);
+                height: 160px;
+                width: 50px;
+            }
+            .reward-side-top {
+                transform: rotateX(90deg) translateZ(55px);
+                width: 160px;
+                height: 50px;
+            }
+            .reward-side-bottom {
+                transform: rotateX(-90deg) translateZ(55px);
+                width: 160px;
+                height: 50px;
+            }
+            .reward-solana-logo {
+                font-size: 40px;
+            }
+            .reward-badge-token {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+            .reward-info-panel h2 {
+                font-size: 18px;
+            }
+            .reward-stat-item .value {
+                font-size: 20px;
+            }
+
+            .reward-planet-1 { --orbit-radius: 120px; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px; }
+            .reward-planet-2 { --orbit-radius: 90px; width: 32px; height: 32px; margin-top: -16px; margin-left: -16px; }
+            .reward-planet-3 { --orbit-radius: 150px; width: 28px; height: 28px; margin-top: -14px; margin-left: -14px; }
+            .reward-planet-4 { --orbit-radius: 70px; width: 25px; height: 25px; margin-top: -12.5px; margin-left: -12.5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-overlay"></div>
+
+    <!-- TOP NAVIGATION MENU -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <svg viewBox="0 0 397.7 311.7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z" fill="url(#nav-gradient1)"/>
+                <path d="M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1L333.1 73.8c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z" fill="url(#nav-gradient2)"/>
+                <path d="M333.1 120.5c2.4-2.4 5.7-3.8 9.2-3.8H397.7c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7c2.4-2.4 5.7-3.8 9.2-3.8h317.4z" fill="url(#nav-gradient3)"/>
+                <defs>
+                    <linearGradient id="nav-gradient1" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#9945FF"/>
+                        <stop offset="100%" stop-color="#14F195"/>
+                    </linearGradient>
+                    <linearGradient id="nav-gradient2" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#9945FF"/>
+                        <stop offset="100%" stop-color="#14F195"/>
+                    </linearGradient>
+                    <linearGradient id="nav-gradient3" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#9945FF"/>
+                        <stop offset="100%" stop-color="#14F195"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>Solana</span>
+        </div>
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">Dashboard</a>
+        <a href="#wallet" class="nav-item" data-page="wallet">Wallet</a>
+        <a href="#reward" class="nav-item" data-page="reward">Reward</a>
+        <a href="#claim" class="nav-item" data-page="claim">Claim</a>
+    </nav>
+
+    <!-- SELECT WALLET - atas kanan (buka wallet page) -->
+    <div class="connect-wallet">
+        <button id="connectBtn">
+            <span class="dot"></span>
+            <span class="wallet-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                    <circle cx="18" cy="14" r="2" fill="currentColor" stroke="none"></circle>
+                </svg>
+            </span>
+            <span>Select Wallet</span>
+        </button>
+    </div>
+
+    <!-- BOTTOM SUPPLY & LOCK INFO -->
+    <div class="bottom-supply-info">
+        <div class="info-item">
+            <span class="info-label">Circulating Supply</span>
+            <span class="info-value"><span class="highlight">~ 450M</span> SOL</span>
+        </div>
+        <span class="info-divider"></span>
+        <div class="info-item">
+            <span class="info-label">Lock Period Distribution</span>
+            <span class="info-value">
+                <span class="highlight-green">●</span> 1-3 mo <span class="highlight">30%</span>
+                <span style="margin:0 4px;color:rgba(130,200,255,0.15);">|</span>
+                <span class="highlight-gold">●</span> 3-6 mo <span class="highlight">25%</span>
+                <span style="margin:0 4px;color:rgba(130,200,255,0.15);">|</span>
+                <span class="highlight" style="color:#a78bfa;">●</span> 6+ mo <span class="highlight">45%</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- BOTTOM TICKER / MARQUEE -->
+    <div class="ticker-wrapper">
+        <div class="ticker-content">
+            <span class="ticker-item">
+                <span class="ticker-icon"></span>
+                <span>Solana <span class="highlight">(SOL)</span> — High-performance blockchain</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon blue"></span>
+                <span>TPS: <span class="highlight">65,000</span> transactions/sec</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon purple"></span>
+                <span>Avg fee: <span class="highlight-green">$0.00025</span> per tx</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon gold"></span>
+                <span>Ecosystem: <span class="highlight">DeFi</span> · <span class="highlight">NFT</span> · <span class="highlight">Web3</span></span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon"></span>
+                <span>Supply: <span class="highlight">~580M</span> SOL max</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon blue"></span>
+                <span>Consensus: <span class="highlight">Proof of History</span> (PoH)</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon purple"></span>
+                <span>24h Volume: <span class="highlight-green">$2.8B</span></span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon gold"></span>
+                <span>Active validators: <span class="highlight">~1,900</span></span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon"></span>
+                <span>Solana <span class="highlight">(SOL)</span> — High-performance blockchain</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon blue"></span>
+                <span>TPS: <span class="highlight">65,000</span> transactions/sec</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon purple"></span>
+                <span>Avg fee: <span class="highlight-green">$0.00025</span> per tx</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon gold"></span>
+                <span>Ecosystem: <span class="highlight">DeFi</span> · <span class="highlight">NFT</span> · <span class="highlight">Web3</span></span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon"></span>
+                <span>Supply: <span class="highlight">~580M</span> SOL max</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon blue"></span>
+                <span>Consensus: <span class="highlight">Proof of History</span> (PoH)</span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon purple"></span>
+                <span>24h Volume: <span class="highlight-green">$2.8B</span></span>
+                <span class="separator">|</span>
+            </span>
+            <span class="ticker-item">
+                <span class="ticker-icon gold"></span>
+                <span>Active validators: <span class="highlight">~1,900</span></span>
+                <span class="separator">|</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- COPYRIGHT -->
+    <div class="copyright">
+        <span>© 2026 Solana Token · Built with <span class="heart">♥</span></span>
+    </div>
+
+    <!-- TOKEN CARD (Dashboard) -->
+    <div class="token-card" id="dashboard-content">
+        <div class="logo-row">
+            <div class="astronaut-logo">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="45" r="22" fill="url(#astronaut-grad1)" stroke="#88ccff" stroke-width="1.5"/>
+                    <ellipse cx="50" cy="48" rx="14" ry="11" fill="url(#astronaut-grad2)" stroke="#88ddff" stroke-width="0.8" opacity="0.9"/>
+                    <circle cx="44" cy="46" r="2.5" fill="#4ade80" opacity="0.9"/>
+                    <circle cx="56" cy="46" r="2.5" fill="#4ade80" opacity="0.9"/>
+                    <rect x="35" y="60" width="30" height="18" rx="4" fill="url(#astronaut-grad1)" stroke="#88ccff" stroke-width="1"/>
+                    <rect x="22" y="60" width="14" height="5" rx="2.5" fill="#88ccff" stroke="#66aaff" stroke-width="0.8"/>
+                    <rect x="64" y="60" width="14" height="5" rx="2.5" fill="#88ccff" stroke="#66aaff" stroke-width="0.8"/>
+                    <rect x="38" y="76" width="8" height="10" rx="2" fill="#88ccff" stroke="#66aaff" stroke-width="0.8"/>
+                    <rect x="54" y="76" width="8" height="10" rx="2" fill="#88ccff" stroke="#66aaff" stroke-width="0.8"/>
+                    <rect x="36" y="84" width="12" height="4" rx="2" fill="#446688"/>
+                    <rect x="52" y="84" width="12" height="4" rx="2" fill="#446688"/>
+                    <rect x="44" y="63" width="12" height="6" rx="1.5" fill="#334466" stroke="#4ade80" stroke-width="0.6"/>
+                    <circle cx="47" cy="66" r="1.5" fill="#4ade80" opacity="0.7"/>
+                    <circle cx="53" cy="66" r="1.5" fill="#4ade80" opacity="0.7"/>
+                    <line x1="50" y1="23" x2="50" y2="14" stroke="#88ccff" stroke-width="1.5"/>
+                    <circle cx="50" cy="13" r="2.5" fill="#4ade80" opacity="0.8"/>
+                    <circle cx="20" cy="30" r="1.5" fill="#88ddff" opacity="0.5"/>
+                    <circle cx="78" cy="28" r="1.5" fill="#88ddff" opacity="0.5"/>
+                    <circle cx="25" cy="75" r="1" fill="#88ddff" opacity="0.4"/>
+                    <circle cx="75" cy="72" r="1" fill="#88ddff" opacity="0.4"/>
+                    <circle cx="30" cy="20" r="1" fill="#88ddff" opacity="0.3"/>
+                    <circle cx="70" cy="18" r="1" fill="#88ddff" opacity="0.3"/>
+                    <defs>
+                        <linearGradient id="astronaut-grad1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#88ccff"/>
+                            <stop offset="100%" stop-color="#4466aa"/>
+                        </linearGradient>
+                        <linearGradient id="astronaut-grad2" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#aaddff"/>
+                            <stop offset="100%" stop-color="#4488cc"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1>SOLANA</h1>
+        </div>
+        <div class="subhead"><span>●</span>  TOKEN  <span>●</span>  SPL  <span>●</span></div>
+
+        <div class="description">
+            <strong>Solana</strong> is a high-performance blockchain built for decentralized applications 
+            and digital assets. With transaction speeds up to <strong>65,000 TPS</strong> and near-zero fees, 
+            Solana is the go-to network for <strong>DeFi</strong>, <strong>NFTs</strong>, and <strong>Web3</strong>. 
+            Its native SPL token powers a rapidly growing ecosystem.
+        </div>
+
+        <div class="token-stats">
+            <div>
+                <span class="label">Symbol</span>
+                <span class="value">SOL</span>
+            </div>
+            <div>
+                <span class="label">Supply</span>
+                <span class="value">~ 580M <small>max</small></span>
+            </div>
+            <div>
+                <span class="label">Layer</span>
+                <span class="value">L1 · PoH</span>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="#" target="_blank" rel="noopener noreferrer" title="Twitter">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span class="label">Twitter</span>
+            </a>
+            <a href="#" target="_blank" rel="noopener noreferrer" title="Telegram">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+                <span class="label">Telegram</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- WALLET PAGE OVERLAY (Import Wallet) -->
+    <div class="wallet-page" id="wallet-content">
+        <button class="close-btn" id="closeWallet">✕ Close</button>
+        
+        <div class="wallet-card">
+            <div class="header">
+                <i class="fas fa-wallet"></i>
+                <h2>Import wallet</h2>
+            </div>
+            <div class="subhead-wallet">
+                <i class="fas fa-key" style="margin-right: 8px; color:#1a5cff;"></i> 
+                Enter your 12‑word seed phrase
+            </div>
+
+            <form id="importForm" autocomplete="off">
+                <div class="seed-grid" id="seedGrid">
+                    <!-- 12 inputs generated by JS -->
+                </div>
+
+                <div class="action-group">
+                    <div class="left">
+                        <button type="button" class="toggle-visibility" id="toggleVisibilityBtn">
+                            <i class="fas fa-eye" id="eyeIcon"></i> 
+                            <span id="visibilityLabel">Hide</span>
+                        </button>
+                    </div>
+                    <div class="btn-group-right">
+                        <button type="button" class="wallet-back-btn" id="walletBackBtn">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="wallet-import-btn" id="importBtn">
+                            <i class="fas fa-arrow-right-to-bracket"></i> Import
+                        </button>
+                    </div>
+                </div>
+
+                <div class="extra-actions">
+                    <button type="button" id="clearBtn"><i class="fas fa-eraser"></i> Clear</button>
+                    <button type="button" id="fillDemoBtn"><i class="fas fa-file-lines"></i> Demo seed</button>
+                </div>
+            </form>
+
+            <div class="footnote">
+                <i class="fas fa-lock" style="opacity:0.6;"></i> 
+                Your seed is never stored — processed locally
+            </div>
+        </div>
+    </div>
+
+    <!-- REWARD PAGE OVERLAY -->
+    <div class="reward-page" id="reward-content">
+        <button class="close-btn" id="closeReward">✕ Close</button>
+        
+        <div class="reward-nebula reward-nebula-1"></div>
+        <div class="reward-nebula reward-nebula-2"></div>
+        
+        <div class="reward-stars" id="rewardStars"></div>
+        
+        <div class="reward-planets-container">
+            <div class="reward-planet reward-planet-1"></div>
+            <div class="reward-planet reward-planet-2"></div>
+            <div class="reward-planet reward-planet-3"></div>
+            <div class="reward-planet reward-planet-4"></div>
+        </div>
+        
+        <div class="reward-token-wrapper">
+            <div class="reward-token-3d" id="rewardToken3d">
+                <div class="reward-face reward-face-front">
+                    <div class="reward-token-content">
+                        <div class="reward-solana-logo">◎</div>
+                        <div class="reward-solana-sub">Solana</div>
+                        <div class="reward-badge-token">✦ REWARD ✦</div>
+                    </div>
+                </div>
+                <div class="reward-face reward-face-back">
+                    <div class="reward-token-content">
+                        <div class="reward-solana-logo">✦</div>
+                        <div class="reward-solana-sub">Total Reward</div>
+                        <div class="reward-badge-token" style="border-color: #14F195; color: #14F195; box-shadow: 0 0 30px rgba(20, 241, 149, 0.2);">
+                            APY 12.5%
+                        </div>
+                    </div>
+                </div>
+                <div class="reward-side reward-side-left"></div>
+                <div class="reward-side reward-side-right"></div>
+                <div class="reward-side reward-side-top"></div>
+                <div class="reward-side reward-side-bottom"></div>
+                <div class="reward-particles" id="rewardParticles"></div>
+            </div>
+        </div>
+        
+        <div class="reward-info-panel">
+            <h2>🏆 Solana Reward Token</h2>
+            <p>Collect and exchange your rewards</p>
+            <div class="reward-stats-panel">
+                <div class="reward-stat-item">
+                    <span class="value">2,847</span>
+                    <span class="label">Total Reward</span>
+                </div>
+                <div class="reward-stat-item">
+                    <span class="value">1,234</span>
+                    <span class="label">Holders</span>
+                </div>
+                <div class="reward-stat-item">
+                    <span class="value">12.5%</span>
+                    <span class="label">APY</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // --- INIT ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0b0f1a);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(8, 4, 14);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // --- POST PROCESSING (bloom) ---
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.5, 0.2, 0.1);
+        composer.addPass(bloomPass);
+
+        // --- LIGHTS ---
+        scene.add(new THREE.AmbientLight(0x404060));
+        const key = new THREE.DirectionalLight(0x8ab4ff, 1.2);
+        key.position.set(4, 6, 8);
+        scene.add(key);
+        const back = new THREE.DirectionalLight(0xffaa66, 0.6);
+        back.position.set(-6, 2, -8);
+        scene.add(back);
+        const rim = new THREE.DirectionalLight(0xaa88ff, 0.8);
+        rim.position.set(-5, 3, 5);
+        scene.add(rim);
+        const fill = new THREE.PointLight(0x4488ff, 0.4);
+        fill.position.set(0, -4, 3);
+        scene.add(fill);
+        const spark = new THREE.PointLight(0x88ddff, 0.5);
+        spark.position.set(3, 1, -5);
+        scene.add(spark);
+
+        // --- CREATE ASTRONAUT 3D ---
+        function createAstronaut() {
+            const astronaut = new THREE.Group();
+
+            const bodyGeo = new THREE.CylinderGeometry(0.8, 0.9, 1.2, 12);
+            const bodyMat = new THREE.MeshPhongMaterial({
+                color: 0x88ccff,
+                emissive: 0x1a3a6a,
+                emissiveIntensity: 0.15,
+                shininess: 40,
+                roughness: 0.3,
+                metalness: 0.7
+            });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0.2;
+            body.scale.set(1, 1, 0.9);
+            astronaut.add(body);
+
+            const headGeo = new THREE.SphereGeometry(0.55, 16, 16);
+            const headMat = new THREE.MeshPhongMaterial({
+                color: 0x88ccff,
+                emissive: 0x1a3a6a,
+                emissiveIntensity: 0.1,
+                shininess: 60,
+                roughness: 0.2,
+                metalness: 0.8,
+                transparent: true,
+                opacity: 0.85
+            });
+            const head = new THREE.Mesh(headGeo, headMat);
+            head.position.y = 1.1;
+            head.scale.set(1, 0.85, 0.9);
+            astronaut.add(head);
+
+            const visorGeo = new THREE.SphereGeometry(0.45, 16, 16);
+            const visorMat = new THREE.MeshPhongMaterial({
+                color: 0x88ddff,
+                emissive: 0x2266cc,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.25,
+                shininess: 100,
+                roughness: 0.05,
+                metalness: 0.9
+            });
+            const visor = new THREE.Mesh(visorGeo, visorMat);
+            visor.position.set(0, 1.15, 0.4);
+            visor.scale.set(0.7, 0.6, 0.3);
+            astronaut.add(visor);
+
+            const lightGeo = new THREE.SphereGeometry(0.06, 8, 8);
+            const lightMat = new THREE.MeshPhongMaterial({
+                color: 0x4ade80,
+                emissive: 0x4ade80,
+                emissiveIntensity: 0.8
+            });
+            const light1 = new THREE.Mesh(lightGeo, lightMat);
+            light1.position.set(-0.2, 1.3, 0.45);
+            astronaut.add(light1);
+            const light2 = new THREE.Mesh(lightGeo, lightMat);
+            light2.position.set(0.2, 1.3, 0.45);
+            astronaut.add(light2);
+
+            const antennaGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.35, 6);
+            const antennaMat = new THREE.MeshPhongMaterial({
+                color: 0xaaccff,
+                metalness: 0.8,
+                roughness: 0.3
+            });
+            const antenna = new THREE.Mesh(antennaGeo, antennaMat);
+            antenna.position.set(0, 1.5, 0);
+            antenna.rotation.x = 0.1;
+            astronaut.add(antenna);
+
+            const tipGeo = new THREE.SphereGeometry(0.04, 6, 6);
+            const tipMat = new THREE.MeshPhongMaterial({
+                color: 0x4ade80,
+                emissive: 0x4ade80,
+                emissiveIntensity: 0.5
+            });
+            const tip = new THREE.Mesh(tipGeo, tipMat);
+            tip.position.set(0, 1.7, 0.02);
+            astronaut.add(tip);
+
+            const armGeo = new THREE.CylinderGeometry(0.12, 0.14, 0.7, 8);
+            const armMat = new THREE.MeshPhongMaterial({
+                color: 0x88ccff,
+                emissive: 0x1a3a6a,
+                emissiveIntensity: 0.1,
+                metalness: 0.7,
+                roughness: 0.3
+            });
+            const armL = new THREE.Mesh(armGeo, armMat);
+            armL.position.set(-0.9, 0.5, 0);
+            armL.rotation.z = 0.3;
+            armL.rotation.x = -0.2;
+            astronaut.add(armL);
+            const armR = new THREE.Mesh(armGeo, armMat);
+            armR.position.set(0.9, 0.5, 0);
+            armR.rotation.z = -0.3;
+            armR.rotation.x = 0.2;
+            astronaut.add(armR);
+
+            const gloveGeo = new THREE.SphereGeometry(0.12, 8, 8);
+            const gloveMat = new THREE.MeshPhongMaterial({
+                color: 0x66aaff,
+                metalness: 0.6,
+                roughness: 0.4
+            });
+            const gloveL = new THREE.Mesh(gloveGeo, gloveMat);
+            gloveL.position.set(-1.25, 0.15, 0);
+            astronaut.add(gloveL);
+            const gloveR = new THREE.Mesh(gloveGeo, gloveMat);
+            gloveR.position.set(1.25, 0.15, 0);
+            astronaut.add(gloveR);
+
+            const legGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.6, 8);
+            const legMat = new THREE.MeshPhongMaterial({
+                color: 0x88ccff,
+                emissive: 0x1a3a6a,
+                emissiveIntensity: 0.1,
+                metalness: 0.7,
+                roughness: 0.3
+            });
+            const legL = new THREE.Mesh(legGeo, legMat);
+            legL.position.set(-0.3, -0.6, 0);
+            legL.scale.set(1, 1, 0.8);
+            astronaut.add(legL);
+            const legR = new THREE.Mesh(legGeo, legMat);
+            legR.position.set(0.3, -0.6, 0);
+            legR.scale.set(1, 1, 0.8);
+            astronaut.add(legR);
+
+            const bootGeo = new THREE.SphereGeometry(0.2, 8, 8);
+            const bootMat = new THREE.MeshPhongMaterial({
+                color: 0x446688,
+                metalness: 0.5,
+                roughness: 0.5
+            });
+            const bootL = new THREE.Mesh(bootGeo, bootMat);
+            bootL.position.set(-0.3, -0.95, 0.05);
+            bootL.scale.set(1, 0.6, 1.3);
+            astronaut.add(bootL);
+            const bootR = new THREE.Mesh(bootGeo, bootMat);
+            bootR.position.set(0.3, -0.95, 0.05);
+            bootR.scale.set(1, 0.6, 1.3);
+            astronaut.add(bootR);
+
+            const beltGeo = new THREE.TorusGeometry(0.75, 0.04, 8, 16);
+            const beltMat = new THREE.MeshPhongMaterial({
+                color: 0x446688,
+                metalness: 0.6,
+                roughness: 0.4
+            });
+            const belt = new THREE.Mesh(beltGeo, beltMat);
+            belt.position.y = -0.1;
+            belt.scale.set(1, 1, 0.85);
+            astronaut.add(belt);
+
+            const panelGeo = new THREE.BoxGeometry(0.5, 0.15, 0.05);
+            const panelMat = new THREE.MeshPhongMaterial({
+                color: 0x334466,
+                emissive: 0x112233,
+                emissiveIntensity: 0.1,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const panel = new THREE.Mesh(panelGeo, panelMat);
+            panel.position.set(0, 0.3, 0.85);
+            astronaut.add(panel);
+
+            const btnGeo = new THREE.SphereGeometry(0.03, 6, 6);
+            const btnMat = new THREE.MeshPhongMaterial({
+                color: 0x4ade80,
+                emissive: 0x4ade80,
+                emissiveIntensity: 0.3
+            });
+            for (let i = -1; i <= 1; i++) {
+                const btn = new THREE.Mesh(btnGeo, btnMat);
+                btn.position.set(i * 0.12, 0.3, 0.9);
+                astronaut.add(btn);
+            }
+
+            return astronaut;
+        }
+
+        const astronaut = createAstronaut();
+        astronaut.scale.set(0.5, 0.5, 0.5);
+        scene.add(astronaut);
+
+        // --- MAIN GROUP (token core / planet) ---
+        const group = new THREE.Group();
+
+        const coreGeo = new THREE.IcosahedronGeometry(1.8, 2);
+        const coreMat = new THREE.MeshPhongMaterial({
+            color: 0x3a7bd5,
+            emissive: 0x1a3a6a,
+            emissiveIntensity: 0.4,
+            shininess: 60,
+            flatShading: true,
+            transparent: true,
+            opacity: 0.92,
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        group.add(core);
+
+        const ringGeo = new THREE.TorusGeometry(2.4, 0.08, 32, 64);
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0x88ccff,
+            emissive: 0x2266cc,
+            emissiveIntensity: 0.8,
+            roughness: 0.2,
+            metalness: 0.3
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2.8;
+        ring.rotation.z = 0.6;
+        group.add(ring);
+
+        const ring2Geo = new THREE.TorusGeometry(2.8, 0.05, 24, 64);
+        const ring2Mat = new THREE.MeshStandardMaterial({
+            color: 0xaa88ff,
+            emissive: 0x6633cc,
+            emissiveIntensity: 0.4,
+            roughness: 0.3,
+            metalness: 0.6,
+            transparent: true,
+            opacity: 0.7
+        });
+        const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+        ring2.rotation.x = 1.2;
+        ring2.rotation.y = 0.8;
+        group.add(ring2);
+
+        const pCount = 280;
+        const pGeo = new THREE.BufferGeometry();
+        const pos = new Float32Array(pCount * 3);
+        const cols = new Float32Array(pCount * 3);
+        const palette = [
+            new THREE.Color(0x88ccff),
+            new THREE.Color(0xaa88ff),
+            new THREE.Color(0x66ddff),
+            new THREE.Color(0xffaa88),
+            new THREE.Color(0x88ffaa)
+        ];
+        for (let i = 0; i < pCount; i++) {
+            const r = 3.8 + Math.random() * 3.2;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.8;
+            pos[i * 3 + 2] = r * Math.cos(phi);
+            const c = palette[Math.floor(Math.random() * palette.length)];
+            cols[i * 3] = c.r;
+            cols[i * 3 + 1] = c.g;
+            cols[i * 3 + 2] = c.b;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        pGeo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.3, 'rgba(200,230,255,0.9)');
+        grad.addColorStop(0.7, 'rgba(100,180,255,0.5)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 64, 64);
+        const tex = new THREE.CanvasTexture(canvas);
+
+        const pMat = new THREE.PointsMaterial({
+            size: 0.25,
+            map: tex,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            vertexColors: true,
+            opacity: 0.85,
+            sizeAttenuation: true
+        });
+        const particles = new THREE.Points(pGeo, pMat);
+        group.add(particles);
+
+        const spGeo = new THREE.BufferGeometry();
+        const spPos = new Float32Array(180 * 3);
+        for (let i = 0; i < 180; i++) {
+            const r = 4.2 + Math.random() * 3.8;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            spPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            spPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.7;
+            spPos[i * 3 + 2] = r * Math.cos(phi);
+        }
+        spGeo.setAttribute('position', new THREE.BufferAttribute(spPos, 3));
+        const spMat = new THREE.PointsMaterial({
+            color: 0x88ddff,
+            size: 0.09,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7,
+            sizeAttenuation: true
+        });
+        const sparkles = new THREE.Points(spGeo, spMat);
+        group.add(sparkles);
+
+        scene.add(group);
+
+        const linesGroup = new THREE.Group();
+        const lineMat = new THREE.LineBasicMaterial({ color: 0x4488cc, transparent: true, opacity: 0.12 });
+        for (let j = 0; j < 3; j++) {
+            const pts = [];
+            const radius = 3.0 + j * 1.2;
+            const segs = 48;
+            for (let i = 0; i <= segs; i++) {
+                const angle = (i / segs) * Math.PI * 2;
+                const x = radius * Math.cos(angle);
+                const z = radius * Math.sin(angle);
+                const y = Math.sin(angle * 2.5) * 0.8 + Math.cos(angle * 1.3) * 0.5;
+                pts.push(new THREE.Vector3(x, y, z));
+            }
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
+            const line = new THREE.Line(lineGeo, lineMat);
+            linesGroup.add(line);
+        }
+        scene.add(linesGroup);
+
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 1200;
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i += 3) {
+            const r = 40 + Math.random() * 60;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            starPos[i] = r * Math.sin(phi) * Math.cos(theta);
+            starPos[i + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPos[i + 2] = r * Math.cos(phi);
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: 0xaaccff,
+            size: 0.25,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // --- ANIMATION ---
+        function animate() {
+            const elapsed = performance.now() * 0.001;
+
+            const orbitRadius = 4.0;
+            const orbitSpeed = 0.3;
+            const angle = elapsed * orbitSpeed;
+            astronaut.position.x = Math.cos(angle) * orbitRadius;
+            astronaut.position.z = Math.sin(angle) * orbitRadius;
+            astronaut.position.y = 0.2 + Math.sin(elapsed * 0.5) * 0.3;
+            astronaut.rotation.y = -angle + Math.PI / 2;
+
+            group.rotation.y = elapsed * 0.08;
+            group.rotation.x = Math.sin(elapsed * 0.03) * 0.1;
+            group.rotation.z = Math.sin(elapsed * 0.05) * 0.05;
+
+            ring.rotation.y += 0.005;
+            ring.rotation.x = Math.PI / 2.8 + Math.sin(elapsed * 0.2) * 0.1;
+            ring2.rotation.x = 1.2 + Math.sin(elapsed * 0.15) * 0.15;
+            ring2.rotation.y += 0.008;
+
+            particles.rotation.y += 0.001;
+            particles.rotation.x = Math.sin(elapsed * 0.02) * 0.05;
+            sparkles.rotation.y -= 0.002;
+
+            linesGroup.rotation.y = elapsed * 0.015;
+            linesGroup.rotation.x = Math.sin(elapsed * 0.02) * 0.1;
+
+            camera.position.x = 8 * Math.sin(elapsed * 0.04) * 0.3 + 8;
+            camera.position.z = 14 * Math.cos(elapsed * 0.03) * 0.2 + 14;
+            camera.lookAt(0, 0, 0);
+
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- RESIZE ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- WALLET PAGE FUNCTIONALITY ---
+        // Build seed inputs
+        const grid = document.getElementById('seedGrid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 12; i++) {
+            const item = document.createElement('div');
+            item.className = 'seed-item';
+            item.dataset.index = i;
+            const indexSpan = document.createElement('span');
+            indexSpan.className = 'seed-index';
+            indexSpan.textContent = i;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `seed-${i}`;
+            input.placeholder = `word ${i}`;
+            input.autocomplete = 'off';
+            input.spellcheck = false;
+            input.setAttribute('data-index', i);
+            item.appendChild(indexSpan);
+            item.appendChild(input);
+            grid.appendChild(item);
+        }
+
+        const seedInputs = Array.from(document.querySelectorAll('.seed-item input'));
+        const seedItems = Array.from(document.querySelectorAll('.seed-item'));
+
+        // Toggle visibility
+        const toggleBtn = document.getElementById('toggleVisibilityBtn');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const visibilityLabel = document.getElementById('visibilityLabel');
+        let isVisible = true;
+
+        toggleBtn.addEventListener('click', function() {
+            isVisible = !isVisible;
+            const type = isVisible ? 'text' : 'password';
+            seedInputs.forEach(inp => inp.type = type);
+            eyeIcon.className = isVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+            visibilityLabel.textContent = isVisible ? 'Hide' : 'Show';
+        });
+
+        // Paste handler
+        seedInputs.forEach((currentInput, currentIndex) => {
+            currentInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                if (!pastedText) return;
+                const words = pastedText.split(/[\s,]+/).filter(w => w.length > 0);
+                if (words.length === 1) {
+                    currentInput.value = words[0];
+                    const parent = currentInput.closest('.seed-item');
+                    if (parent) {
+                        parent.classList.remove('paste-highlight');
+                        void parent.offsetWidth;
+                        parent.classList.add('paste-highlight');
+                        setTimeout(() => parent.classList.remove('paste-highlight'), 500);
+                    }
+                    return;
+                }
+                const startIndex = currentIndex;
+                const maxIndex = Math.min(startIndex + words.length, 12);
+                for (let i = startIndex; i < maxIndex; i++) {
+                    const wordIndex = i - startIndex;
+                    if (wordIndex < words.length) {
+                        seedInputs[i].value = words[wordIndex];
+                    }
+                }
+                for (let i = startIndex; i < maxIndex; i++) {
+                    const parent = seedInputs[i].closest('.seed-item');
+                    if (parent) {
+                        parent.classList.remove('paste-highlight');
+                        void parent.offsetWidth;
+                        parent.classList.add('paste-highlight');
+                        setTimeout(() => parent.classList.remove('paste-highlight'), 500);
+                    }
+                }
+                if (maxIndex < 12) {
+                    seedInputs[maxIndex].focus();
+                } else {
+                    seedInputs[11].focus();
+                }
+            });
+        });
+
+        // Clear
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            seedInputs.forEach(inp => inp.value = '');
+            seedInputs[0]?.focus();
+        });
+
+        // Demo seed
+        document.getElementById('fillDemoBtn').addEventListener('click', function() {
+            const demo = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident'];
+            seedInputs.forEach((inp, idx) => {
+                inp.value = (idx < demo.length) ? demo[idx] : '';
+            });
+            seedInputs[0]?.focus();
+        });
+
+        // Form submit
+        const form = document.getElementById('importForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const words = seedInputs.map(inp => inp.value.trim());
+            const filled = words.filter(w => w.length > 0);
+            if (filled.length < 12) {
+                alert(`Please enter all 12 seed words. (${filled.length}/12)`);
+                return;
+            }
+            const phrase = words.join(' ');
+            alert(`✅ Wallet imported (simulated)\n\nSeed: ${phrase}\n\nYour wallet would now be unlocked.`);
+        });
+
+        // Enter key navigation
+        seedInputs.forEach((inp, idx) => {
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const next = seedInputs[idx + 1];
+                    if (next) {
+                        next.focus();
+                    } else {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+        });
+
+        // --- NAVIGATION LOGIC ---
+        const walletPage = document.getElementById('wallet-content');
+        const rewardPage = document.getElementById('reward-content');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Open wallet from top-right button
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            walletPage.classList.add('active');
+            dashboardContent.style.display = 'none';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="wallet"]').classList.add('active');
+            setTimeout(() => seedInputs[0]?.focus(), 200);
+        });
+
+        // Close wallet
+        document.getElementById('closeWallet').addEventListener('click', function() {
+            walletPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
+        // Wallet Back button
+        document.getElementById('walletBackBtn').addEventListener('click', function() {
+            walletPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
+        // Navigation items
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                navItems.forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+
+                // Hide all pages
+                walletPage.classList.remove('active');
+                rewardPage.classList.remove('active');
+                dashboardContent.style.display = 'block';
+
+                if (page === 'wallet') {
+                    walletPage.classList.add('active');
+                    dashboardContent.style.display = 'none';
+                    setTimeout(() => seedInputs[0]?.focus(), 200);
+                } else if (page === 'reward') {
+                    rewardPage.classList.add('active');
+                    dashboardContent.style.display = 'none';
+                } else if (page === 'dashboard') {
+                    dashboardContent.style.display = 'block';
+                }
+            });
+        });
+
+        // --- REWARD PAGE ---
+        // Stars
+        function createRewardStars() {
+            const container = document.getElementById('rewardStars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'reward-star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (2 + Math.random() * 3) + 's');
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+        }
+        createRewardStars();
+
+        // Reward particles
+        function createRewardParticles() {
+            const container = document.getElementById('rewardParticles');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'reward-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (4 + Math.random() * 4) + 's';
+                particle.style.width = (2 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createRewardParticles();
+
+        // Reward token interaction
+        const rewardToken = document.getElementById('rewardToken3d');
+        let rewardIsHovering = false;
+        let rewardIsFlipped = false;
+
+        document.querySelector('.reward-token-wrapper').addEventListener('mouseenter', () => {
+            rewardIsHovering = true;
+        });
+        document.querySelector('.reward-token-wrapper').addEventListener('mouseleave', () => {
+            rewardIsHovering = false;
+            rewardToken.style.transform = 'rotateY(0deg) rotateX(10deg)';
+        });
+        document.querySelector('.reward-token-wrapper').addEventListener('mousemove', (e) => {
+            if (!rewardIsHovering) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+            const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+            rewardToken.style.transform = `rotateY(${x * 30}deg) rotateX(${-y * 30}deg)`;
+        });
+        document.querySelector('.reward-token-wrapper').addEventListener('click', () => {
+            rewardIsFlipped = !rewardIsFlipped;
+            rewardToken.style.animation = 'none';
+            rewardToken.style.transform = rewardIsFlipped ? 'rotateY(180deg) rotateX(10deg)' : 'rotateY(0deg) rotateX(10deg)';
+            setTimeout(() => {
+                rewardToken.style.animation = 'rotate-reward 12s linear infinite';
+            }, 100);
+        });
+
+        // Close reward
+        document.getElementById('closeReward').addEventListener('click', () => {
+            rewardPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
+        console.log('🚀 Solana Token with Wallet & Reward pages integrated!');
+        console.log('🔐 Click "Select Wallet" or "Wallet" menu to import seed phrase.');
+    </script>
+</body>
+</html>
