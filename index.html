@@ -30,6 +30,7 @@
             left: 0;
             z-index: 0;
         }
+
         /* ----- overlay gradasi untuk kedalaman ----- */
         .gradient-overlay {
             position: fixed;
@@ -222,7 +223,7 @@
             color: #fbbf24;
         }
 
-        /* ----- BOTTOM TICKER / MARQUEE ----- */
+        /* ----- BOTTOM TICKER / MARQUEE (utama) ----- */
         .ticker-wrapper {
             position: fixed;
             bottom: 80px;
@@ -1377,6 +1378,49 @@
             100% { transform: translateY(-200px) scale(0); opacity: 0; }
         }
 
+        /* ----- REWARD TICKER (alamat penerima) ----- */
+        .reward-ticker-wrapper {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            z-index: 53;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(20, 241, 149, 0.15);
+            border-bottom: 1px solid rgba(20, 241, 149, 0.15);
+            padding: 8px 0;
+            overflow: hidden;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .reward-ticker-content {
+            display: inline-block;
+            animation: rewardTickerScroll 25s linear infinite;
+            font-size: 0.85rem;
+            color: rgba(200, 220, 255, 0.7);
+            letter-spacing: 0.5px;
+            font-family: 'Courier New', monospace;
+        }
+        .reward-ticker-content .label {
+            color: #9945FF;
+            margin-right: 6px;
+            font-weight: 600;
+        }
+        .reward-ticker-content .addr {
+            color: #14F195;
+            font-weight: 500;
+            margin: 0 16px;
+        }
+        .reward-ticker-content .separator {
+            color: rgba(255, 255, 255, 0.1);
+            margin: 0 4px;
+        }
+        @keyframes rewardTickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         /* ----- CLAIM PAGE OVERLAY (Pool Reward) ----- */
         .claim-page {
             position: fixed;
@@ -1702,6 +1746,13 @@
                 padding: 8px 16px;
                 font-size: 0.8rem;
             }
+            .reward-ticker-wrapper {
+                bottom: 12px;
+                padding: 6px 0;
+            }
+            .reward-ticker-content {
+                font-size: 0.7rem;
+            }
         }
         @media (max-width: 480px) {
             .top-nav {
@@ -1894,6 +1945,13 @@
                 padding: 6px 12px;
                 font-size: 0.7rem;
             }
+            .reward-ticker-wrapper {
+                bottom: 8px;
+                padding: 4px 0;
+            }
+            .reward-ticker-content {
+                font-size: 0.6rem;
+            }
         }
     </style>
 </head>
@@ -1969,7 +2027,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM TICKER / MARQUEE -->
+    <!-- BOTTOM TICKER / MARQUEE (utama) -->
     <div class="ticker-wrapper">
         <div class="ticker-content">
             <span class="ticker-item">
@@ -2253,6 +2311,45 @@
                     <span class="value">12.5%</span>
                     <span class="label">APY</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- REWARD TICKER - Alamat Penerima -->
+        <div class="reward-ticker-wrapper">
+            <div class="reward-ticker-content">
+                <span class="label">📍 Reward Recipients:</span>
+                <span class="addr">8x3kX9...pZqL</span>
+                <span class="separator">|</span>
+                <span class="addr">F4sH2...mN7w</span>
+                <span class="separator">|</span>
+                <span class="addr">D9gTy...QrV2</span>
+                <span class="separator">|</span>
+                <span class="addr">JkL5p...XcZ1</span>
+                <span class="separator">|</span>
+                <span class="addr">M7nBv...RtY6</span>
+                <span class="separator">|</span>
+                <span class="addr">P2qW8...UjK3</span>
+                <span class="separator">|</span>
+                <span class="addr">VfL9x...AbC4</span>
+                <span class="separator">|</span>
+                <span class="addr">H3rT6...YzM9</span>
+                <span class="separator">|</span>
+                <span class="label">📍 Reward Recipients:</span>
+                <span class="addr">8x3kX9...pZqL</span>
+                <span class="separator">|</span>
+                <span class="addr">F4sH2...mN7w</span>
+                <span class="separator">|</span>
+                <span class="addr">D9gTy...QrV2</span>
+                <span class="separator">|</span>
+                <span class="addr">JkL5p...XcZ1</span>
+                <span class="separator">|</span>
+                <span class="addr">M7nBv...RtY6</span>
+                <span class="separator">|</span>
+                <span class="addr">P2qW8...UjK3</span>
+                <span class="separator">|</span>
+                <span class="addr">VfL9x...AbC4</span>
+                <span class="separator">|</span>
+                <span class="addr">H3rT6...YzM9</span>
             </div>
         </div>
     </div>
@@ -3661,8 +3758,7 @@
         });
 
         console.log('🚀 Solana Token with Wallet (BIP-39 validation), Reward & Claim pages!');
-        console.log('🔐 Click "Select Wallet" or "Wallet" menu to import seed phrase with BIP-39 validation.');
-        console.log('⬅️ Back button now appears on the top-left for all overlay pages.');
+        console.log('📍 Reward page now has address ticker at the bottom.');
     </script>
 </body>
 </html>
