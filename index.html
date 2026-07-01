@@ -525,7 +525,7 @@
             font-size: 0.8rem;
         }
 
-        /* ----- WALLET PAGE OVERLAY (Import Wallet) ----- */
+        /* ----- WALLET PAGE OVERLAY (dengan BIP-39 Validation) ----- */
         .wallet-page {
             position: fixed;
             top: 0;
@@ -570,7 +570,7 @@
         }
 
         .wallet-card {
-            max-width: 700px;
+            max-width: 900px;
             width: 100%;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(12px);
@@ -627,11 +627,64 @@
             font-weight: 450;
         }
 
+        /* Seed Controls */
+        .seed-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .seed-controls label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(180, 210, 255, 0.6);
+        }
+
+        .toggle-group {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            padding: 0.25rem;
+            gap: 0.25rem;
+        }
+
+        .toggle-group button {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: rgba(180, 210, 255, 0.4);
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .toggle-group button.active {
+            background: #1a5cff;
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 92, 255, 0.3);
+        }
+
+        .toggle-group button:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
         .seed-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 0.9rem 1rem;
-            margin: 2rem 0 1.5rem;
+            margin: 1.5rem 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .seed-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
@@ -647,7 +700,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             padding: 0.2rem 0.2rem 0.2rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.08);
             transition: border 0.2s, box-shadow 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             position: relative;
@@ -659,16 +712,30 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        .seed-item.valid {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .seed-item.invalid {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .seed-item.hidden-field {
+            display: none;
+        }
+
         .seed-index {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
-            color: rgba(180, 210, 255, 0.4);
+            color: rgba(180, 210, 255, 0.3);
             letter-spacing: 0.02em;
             background: rgba(255, 255, 255, 0.05);
-            padding: 0.2rem 0.6rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 30px;
             margin-right: 0.5rem;
-            min-width: 28px;
+            min-width: 24px;
             text-align: center;
             line-height: 1.4;
             flex-shrink: 0;
@@ -678,7 +745,7 @@
             border: none;
             background: transparent;
             padding: 0.75rem 0.25rem 0.75rem 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             width: 100%;
             outline: none;
             color: #c8ddff;
@@ -688,10 +755,54 @@
         }
 
         .seed-item input::placeholder {
-            color: rgba(180, 210, 255, 0.25);
+            color: rgba(180, 210, 255, 0.2);
             font-weight: 400;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 0.02em;
+        }
+
+        .seed-item .validation-icon {
+            position: absolute;
+            right: 8px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .seed-item.valid .validation-icon {
+            opacity: 1;
+            color: #22c55e;
+        }
+
+        .seed-item.invalid .validation-icon {
+            opacity: 1;
+            color: #ef4444;
+        }
+
+        .validation-summary {
+            margin-top: 0.8rem;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(180, 210, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .validation-summary.valid {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .validation-summary.invalid {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
         }
 
         .wallet-card .action-group {
@@ -802,6 +913,14 @@
             box-shadow: 0 6px 14px -4px rgba(26, 92, 255, 0.4);
         }
 
+        .wallet-import-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .wallet-card .extra-actions {
             display: flex;
             justify-content: flex-end;
@@ -872,9 +991,16 @@
                 width: 100%;
                 justify-content: center;
             }
+            .seed-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toggle-group {
+                justify-content: center;
+            }
         }
 
-        /* --- REWARD PAGE OVERLAY --- */
+        /* ----- REWARD PAGE OVERLAY ----- */
         .reward-page {
             position: fixed;
             top: 0;
@@ -917,7 +1043,6 @@
             transform: scale(1.05);
         }
 
-        /* Reward Page Stars */
         .reward-stars {
             position: fixed;
             top: 0;
@@ -938,7 +1063,6 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Reward Page Nebula */
         .reward-nebula {
             position: fixed;
             border-radius: 50%;
@@ -968,7 +1092,6 @@
             100% { transform: translate(50px, 30px) scale(1.2); }
         }
 
-        /* Reward Orbiting Planets */
         .reward-planets-container {
             position: fixed;
             top: 0;
@@ -1078,7 +1201,6 @@
             animation-direction: reverse;
         }
 
-        /* Reward Token 3D */
         .reward-token-wrapper {
             width: 280px;
             height: 280px;
@@ -1270,6 +1392,162 @@
             100% { transform: translateY(-200px) scale(0); opacity: 0; }
         }
 
+        /* ----- CLAIM PAGE OVERLAY (Pool Reward) ----- */
+        .claim-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            background: #0b0b1a;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .claim-page.active {
+            display: flex;
+        }
+
+        .claim-page .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 10px 24px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', system-ui, sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .claim-page .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .claim-info {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 55;
+        }
+        .claim-info h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #9945FF, #14F195);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(153, 69, 255, 0.3);
+        }
+        .claim-info p {
+            font-size: 1.1rem;
+            margin: 8px 0 0;
+            opacity: 0.9;
+            color: #ddd;
+            letter-spacing: 1px;
+        }
+
+        .claim-stats {
+            position: absolute;
+            bottom: 120px;
+            left: 30px;
+            color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border-left: 4px solid #14F195;
+            pointer-events: none;
+            z-index: 55;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .claim-stats span {
+            color: #14F195;
+            font-weight: bold;
+        }
+
+        .claim-badge {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            color: #ccc;
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            border: 1px solid #9945FF40;
+            letter-spacing: 1px;
+            z-index: 55;
+            pointer-events: none;
+        }
+        .claim-badge i {
+            color: #14F195;
+            margin-right: 6px;
+        }
+
+        .claim-ticker {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(20, 241, 149, 0.2);
+            border-bottom: 1px solid rgba(20, 241, 149, 0.2);
+            padding: 10px 0;
+            overflow: hidden;
+            z-index: 55;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .claim-ticker-content {
+            display: inline-block;
+            animation: tickerScrollClaim 25s linear infinite;
+            font-size: 1rem;
+            color: #c0d0e0;
+            letter-spacing: 0.5px;
+            font-family: 'Courier New', monospace;
+        }
+        .claim-ticker-content span {
+            margin: 0 40px;
+            color: #14F195;
+            font-weight: bold;
+        }
+        .claim-ticker-content .label {
+            color: #9945FF;
+            margin-right: 8px;
+        }
+        @keyframes tickerScrollClaim {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        #claimCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 51;
+            display: block;
+        }
+
         /* responsif */
         @media (max-width: 768px) {
             .top-nav {
@@ -1450,6 +1728,11 @@
             .reward-planet-2 { --orbit-radius: 120px; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px; }
             .reward-planet-3 { --orbit-radius: 200px; width: 35px; height: 35px; margin-top: -17.5px; margin-left: -17.5px; }
             .reward-planet-4 { --orbit-radius: 90px; width: 30px; height: 30px; margin-top: -15px; margin-left: -15px; }
+
+            .claim-info h1 { font-size: 1.8rem; }
+            .claim-stats { font-size: 0.9rem; padding: 12px 18px; bottom: 100px; }
+            .claim-ticker { bottom: 60px; padding: 6px 0; }
+            .claim-ticker-content { font-size: 0.75rem; }
         }
         @media (max-width: 480px) {
             .top-nav {
@@ -1671,7 +1954,7 @@
         <a href="#claim" class="nav-item" data-page="claim">Claim</a>
     </nav>
 
-    <!-- SELECT WALLET - atas kanan (buka wallet page) -->
+    <!-- SELECT WALLET - atas kanan -->
     <div class="connect-wallet">
         <button id="connectBtn">
             <span class="dot"></span>
@@ -1879,10 +2162,9 @@
         </div>
     </div>
 
-    <!-- WALLET PAGE OVERLAY (Import Wallet) -->
+    <!-- WALLET PAGE OVERLAY (dengan BIP-39 Validation) -->
     <div class="wallet-page" id="wallet-content">
         <button class="close-btn" id="closeWallet">✕ Close</button>
-        
         <div class="wallet-card">
             <div class="header">
                 <i class="fas fa-wallet"></i>
@@ -1890,12 +2172,26 @@
             </div>
             <div class="subhead-wallet">
                 <i class="fas fa-key" style="margin-right: 8px; color:#1a5cff;"></i> 
-                Enter your 12‑word seed phrase
+                Enter your seed phrase (BIP-39)
+            </div>
+
+            <!-- Toggle 12/24 words -->
+            <div class="seed-controls">
+                <label>Seed length:</label>
+                <div class="toggle-group">
+                    <button type="button" class="active" data-words="12" id="toggle12">12 words</button>
+                    <button type="button" data-words="24" id="toggle24">24 words</button>
+                </div>
             </div>
 
             <form id="importForm" autocomplete="off">
                 <div class="seed-grid" id="seedGrid">
-                    <!-- 12 inputs generated by JS -->
+                    <!-- 24 inputs generated by JS -->
+                </div>
+
+                <div id="validationSummary" class="validation-summary">
+                    <i class="fas fa-circle-info"></i> 
+                    <span id="validationMessage">Enter 12 or 24 BIP-39 words</span>
                 </div>
 
                 <div class="action-group">
@@ -1909,7 +2205,7 @@
                         <button type="button" class="wallet-back-btn" id="walletBackBtn">
                             <i class="fas fa-arrow-left"></i> Back
                         </button>
-                        <button type="submit" class="wallet-import-btn" id="importBtn">
+                        <button type="submit" class="wallet-import-btn" id="importBtn" disabled>
                             <i class="fas fa-arrow-right-to-bracket"></i> Import
                         </button>
                     </div>
@@ -1931,19 +2227,15 @@
     <!-- REWARD PAGE OVERLAY -->
     <div class="reward-page" id="reward-content">
         <button class="close-btn" id="closeReward">✕ Close</button>
-        
         <div class="reward-nebula reward-nebula-1"></div>
         <div class="reward-nebula reward-nebula-2"></div>
-        
         <div class="reward-stars" id="rewardStars"></div>
-        
         <div class="reward-planets-container">
             <div class="reward-planet reward-planet-1"></div>
             <div class="reward-planet reward-planet-2"></div>
             <div class="reward-planet reward-planet-3"></div>
             <div class="reward-planet reward-planet-4"></div>
         </div>
-        
         <div class="reward-token-wrapper">
             <div class="reward-token-3d" id="rewardToken3d">
                 <div class="reward-face reward-face-front">
@@ -1969,7 +2261,6 @@
                 <div class="reward-particles" id="rewardParticles"></div>
             </div>
         </div>
-        
         <div class="reward-info-panel">
             <h2>🏆 Solana Reward Token</h2>
             <p>Collect and exchange your rewards</p>
@@ -1990,6 +2281,46 @@
         </div>
     </div>
 
+    <!-- CLAIM PAGE OVERLAY (Pool Reward) -->
+    <div class="claim-page" id="claim-content">
+        <button class="close-btn" id="closeClaim">✕ Close</button>
+        
+        <div class="claim-info">
+            <h1>⚡ Pool Reward Today</h1>
+            <p>Solana Network · 3D Real-time</p>
+        </div>
+        <div class="claim-stats">
+            🏆 Total Reward: <span id="claimRewardValue">0.00</span> SOL
+        </div>
+        <div class="claim-badge">
+            <i>◆</i> SOLANA
+        </div>
+        <div class="claim-ticker">
+            <div class="claim-ticker-content">
+                <span class="label">📍 Receiving Addresses:</span>
+                <span>8x3kX9...pZqL</span>
+                <span>F4sH2...mN7w</span>
+                <span>D9gTy...QrV2</span>
+                <span>JkL5p...XcZ1</span>
+                <span>M7nBv...RtY6</span>
+                <span>P2qW8...UjK3</span>
+                <span>VfL9x...AbC4</span>
+                <span>H3rT6...YzM9</span>
+                <span class="label">📍 Receiving Addresses:</span>
+                <span>8x3kX9...pZqL</span>
+                <span>F4sH2...mN7w</span>
+                <span>D9gTy...QrV2</span>
+                <span>JkL5p...XcZ1</span>
+                <span>M7nBv...RtY6</span>
+                <span>P2qW8...UjK3</span>
+                <span>VfL9x...AbC4</span>
+                <span>H3rT6...YzM9</span>
+            </div>
+        </div>
+        
+        <canvas id="claimCanvas"></canvas>
+    </div>
+
     <!-- Three.js -->
     <script type="importmap">
         {
@@ -2003,6 +2334,7 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -2443,17 +2775,232 @@
             composer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- WALLET PAGE FUNCTIONALITY ---
-        // Build seed inputs
+        // ============================================
+        // WALLET PAGE FUNCTIONALITY (BIP-39 Validation)
+        // ============================================
+        // BIP-39 word list (2048 words)
+        const BIP39_WORDS = new Set([
+            "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse",
+            "access", "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act",
+            "action", "actor", "actress", "actual", "adapt", "add", "addict", "address", "adjust", "admit",
+            "adult", "advance", "advice", "aerobic", "affair", "afford", "afraid", "again", "age", "agent",
+            "agree", "ahead", "aim", "air", "airport", "aisle", "alarm", "album", "alcohol", "alert",
+            "alien", "all", "alley", "allow", "almost", "alone", "alpha", "already", "also", "alter",
+            "always", "amateur", "amazing", "among", "amount", "amused", "analyst", "anchor", "ancient", "anger",
+            "angle", "angry", "animal", "ankle", "announce", "annual", "another", "answer", "antenna", "antique",
+            "anxiety", "any", "apart", "apology", "appear", "apple", "approve", "april", "arch", "arctic",
+            "area", "arena", "argue", "arm", "armed", "armor", "army", "around", "arrange", "arrest",
+            "arrive", "arrow", "art", "artefact", "artist", "artwork", "ask", "aspect", "assault", "asset",
+            "assist", "assume", "asthma", "athlete", "atom", "attack", "attend", "attitude", "attract", "auction",
+            "audit", "august", "aunt", "author", "auto", "autumn", "average", "avocado", "avoid", "awake",
+            "aware", "away", "awesome", "awful", "awkward", "axis", "baby", "bachelor", "bacon", "badge",
+            "bag", "balance", "balcony", "ball", "bamboo", "banana", "banner", "bar", "barely", "bargain",
+            "barrel", "base", "basic", "basket", "battle", "beach", "bean", "beauty", "because", "become",
+            "beef", "before", "begin", "behave", "behind", "believe", "below", "belt", "bench", "benefit",
+            "best", "betray", "better", "between", "beyond", "bicycle", "bid", "bike", "bind", "biology",
+            "bird", "birth", "bitter", "black", "blade", "blame", "blanket", "blast", "bleak", "bless",
+            "blind", "blood", "blossom", "blouse", "blue", "blur", "blush", "board", "boat", "body",
+            "boil", "bomb", "bone", "bonus", "book", "boost", "border", "boring", "borrow", "boss",
+            "bottom", "bounce", "box", "boy", "bracket", "brain", "brand", "brass", "brave", "bread",
+            "breeze", "brick", "bridge", "brief", "bright", "bring", "brisk", "broccoli", "broken", "bronze",
+            "broom", "brother", "brown", "brush", "bubble", "buddy", "budget", "buffalo", "build", "bulb",
+            "bulk", "bullet", "bundle", "bunker", "burden", "burger", "burst", "bus", "business", "busy",
+            "butter", "buyer", "buzz", "cabbage", "cabin", "cable", "cactus", "cage", "cake", "call",
+            "calm", "camera", "camp", "can", "canal", "cancel", "candy", "cannon", "canoe", "canvas",
+            "canyon", "capable", "capital", "captain", "car", "carbon", "card", "cargo", "carpet", "carry",
+            "cart", "case", "cash", "casino", "castle", "casual", "cat", "catalog", "catch", "category",
+            "cattle", "caught", "cause", "caution", "cave", "ceiling", "celery", "cement", "census", "century",
+            "cereal", "certain", "chair", "chalk", "champion", "change", "chaos", "chapter", "charge", "chase",
+            "chat", "cheap", "check", "cheese", "chef", "cherry", "chest", "chicken", "chief", "child",
+            "chimney", "choice", "choose", "chronic", "chuckle", "chunk", "churn", "cigar", "cinnamon", "circle",
+            "citizen", "city", "civil", "claim", "clap", "clarify", "claw", "clay", "clean", "clerk",
+            "clever", "click", "client", "cliff", "climb", "clinic", "clip", "clock", "clog", "close",
+            "cloth", "cloud", "clown", "club", "clump", "cluster", "clutch", "coach", "coast", "coconut",
+            "code", "coffee", "coil", "coin", "collect", "color", "column", "combine", "come", "comfort",
+            "comic", "common", "company", "concert", "conduct", "confirm", "congress", "connect", "consider", "control",
+            "convince", "cook", "cool", "copper", "copy", "coral", "core", "corn", "correct", "cost",
+            "cotton", "couch", "country", "couple", "course", "cousin", "cover", "coyote", "crack", "cradle",
+            "craft", "cram", "crane", "crash", "crater", "crawl", "crazy", "cream", "credit", "creek",
+            "crew", "cricket", "crime", "crisp", "critic", "crop", "cross", "crouch", "crowd", "crucial",
+            "cruel", "cruise", "crumble", "crunch", "crush", "cry", "crystal", "cube", "culture", "cup",
+            "cupboard", "curious", "current", "curtain", "curve", "cushion", "custom", "cute", "cycle", "dad",
+            "damage", "damp", "dance", "danger", "daring", "dash", "daughter", "dawn", "day", "deal",
+            "debate", "debris", "decade", "december", "decide", "decline", "decorate", "decrease", "deer", "defense",
+            "define", "defy", "degree", "delay", "deliver", "demand", "demise", "denial", "dentist", "deny",
+            "depart", "depend", "deposit", "depth", "deputy", "derive", "describe", "desert", "design", "desk",
+            "despair", "destroy", "detail", "detect", "develop", "device", "devote", "diagram", "dial", "diamond",
+            "diary", "dice", "diesel", "diet", "differ", "digital", "dignity", "dilemma", "dinner", "dinosaur",
+            "direct", "dirt", "disagree", "discover", "disease", "dish", "dismiss", "disorder", "display", "distance",
+            "divert", "divide", "divorce", "dizzy", "doctor", "document", "dog", "doll", "dolphin", "domain",
+            "donate", "donkey", "donor", "door", "dose", "double", "dove", "draft", "dragon", "drama",
+            "drastic", "draw", "dream", "dress", "drift", "drill", "drink", "drip", "drive", "drop",
+            "drum", "dry", "duck", "dumb", "dune", "during", "dust", "dutch", "duty", "dwarf",
+            "dynamic", "eager", "eagle", "early", "earn", "earth", "easily", "east", "easy", "echo",
+            "ecology", "economy", "edge", "edit", "educate", "effort", "egg", "eight", "either", "elbow",
+            "elder", "electric", "elegant", "element", "elephant", "elevator", "elite", "else", "embark", "embody",
+            "embrace", "emerge", "emotion", "employ", "empower", "empty", "enable", "enact", "end", "endless",
+            "endorse", "enemy", "energy", "enforce", "engage", "engine", "enhance", "enjoy", "enlist", "enough",
+            "enrich", "enroll", "ensure", "enter", "entire", "entry", "envelope", "episode", "equal", "equip",
+            "era", "erase", "erode", "erosion", "error", "erupt", "escape", "essay", "essence", "estate",
+            "eternal", "ethics", "evidence", "evil", "evoke", "evolve", "exact", "example", "excess", "exchange",
+            "excite", "exclude", "excuse", "execute", "exercise", "exhaust", "exhibit", "exile", "exist", "exit",
+            "exotic", "expand", "expect", "expire", "explain", "expose", "express", "extend", "extra", "eye",
+            "eyebrow", "fabric", "face", "faculty", "fade", "faint", "faith", "fall", "false", "fame",
+            "family", "famous", "fan", "fancy", "fantasy", "farm", "fashion", "fat", "fatal", "father",
+            "fatigue", "fault", "favorite", "feature", "february", "federal", "fee", "feed", "feel", "female",
+            "fence", "festival", "fetch", "fever", "few", "fiber", "fiction", "field", "figure", "file",
+            "film", "filter", "final", "find", "fine", "finger", "finish", "fire", "firm", "first",
+            "fiscal", "fish", "fit", "fitness", "fix", "flag", "flame", "flash", "flat", "flavor",
+            "flee", "flight", "flip", "float", "flock", "floor", "flower", "fluid", "flush", "fly",
+            "foam", "focus", "fog", "foil", "fold", "follow", "food", "foot", "force", "forest",
+            "forget", "fork", "fortune", "forum", "forward", "fossil", "foster", "found", "fox", "fragile",
+            "frame", "frequent", "fresh", "friend", "fringe", "frog", "front", "frost", "frown", "frozen",
+            "fruit", "fuel", "fun", "funny", "furnace", "fury", "future", "gadget", "gain", "galaxy",
+            "gallery", "game", "gap", "garage", "garbage", "garden", "garlic", "garment", "gas", "gasp",
+            "gate", "gather", "gauge", "gaze", "general", "genius", "genre", "gentle", "genuine", "gesture",
+            "ghost", "giant", "gift", "giggle", "ginger", "giraffe", "girl", "give", "glad", "glance",
+            "glare", "glass", "glide", "glimpse", "globe", "gloom", "glory", "glove", "glow", "glue",
+            "goat", "goddess", "gold", "good", "goose", "gorilla", "gospel", "gossip", "govern", "gown",
+            "grab", "grace", "grain", "grant", "grape", "grass", "gravity", "great", "green", "grid",
+            "grief", "grit", "grocery", "group", "grow", "grunt", "guard", "guess", "guide", "guilt",
+            "guitar", "gun", "gym", "habit", "hair", "half", "hammer", "hamster", "hand", "happy",
+            "harbor", "hard", "harsh", "harvest", "hat", "have", "hawk", "hazard", "head", "health",
+            "heart", "heavy", "hedgehog", "height", "hello", "helmet", "help", "hen", "hero", "hidden",
+            "high", "hill", "hint", "hip", "hire", "history", "hobby", "hockey", "hold", "hole",
+            "holiday", "hollow", "home", "honey", "hood", "hope", "horn", "horror", "horse", "hospital",
+            "host", "hotel", "hour", "hover", "hub", "human", "humble", "humor", "hundred", "hungry",
+            "hunt", "hurdle", "hurry", "hurt", "husband", "hybrid", "ice", "icon", "idea", "identify",
+            "idle", "ignore", "ill", "illegal", "illness", "image", "imitate", "immense", "immune", "impact",
+            "impose", "improve", "impulse", "inch", "include", "income", "increase", "index", "indicate", "indoor",
+            "industry", "infant", "inflict", "inform", "inhale", "inherit", "initial", "inject", "injury", "inmate",
+            "inner", "innocent", "input", "inquiry", "insane", "insect", "inside", "inspire", "install", "intact",
+            "interest", "into", "invest", "invite", "involve", "iron", "island", "isolate", "issue", "item",
+            "ivory", "jacket", "jaguar", "jar", "jazz", "jealous", "jeans", "jelly", "jewel", "job",
+            "join", "joke", "journey", "joy", "judge", "juice", "jump", "jungle", "junior", "junk",
+            "just", "kangaroo", "keen", "keep", "ketchup", "key", "kick", "kid", "kidney", "kind",
+            "kingdom", "kiss", "kit", "kitchen", "kite", "kitten", "kiwi", "knee", "knife", "knock",
+            "know", "lab", "label", "labor", "ladder", "lady", "lake", "lamp", "language", "laptop",
+            "large", "later", "latin", "laugh", "laundry", "lava", "law", "lawn", "lawsuit", "layer",
+            "lazy", "leader", "leaf", "learn", "leave", "lecture", "left", "leg", "legal", "legend",
+            "leisure", "lemon", "lend", "length", "lens", "leopard", "lesson", "letter", "level", "liar",
+            "liberty", "library", "license", "life", "lift", "light", "like", "limb", "limit", "link",
+            "lion", "liquid", "list", "little", "live", "lizard", "load", "loan", "lobster", "local",
+            "lock", "logic", "lonely", "long", "loop", "lottery", "loud", "lounge", "love", "loyal",
+            "lucky", "luggage", "lumber", "lunar", "lunch", "luxury", "lyrics", "machine", "mad", "magic",
+            "magnet", "maid", "mail", "main", "major", "make", "mammal", "man", "manage", "mandate",
+            "mango", "mansion", "manual", "maple", "marble", "march", "margin", "marine", "market", "marriage",
+            "mask", "mass", "master", "match", "material", "math", "matrix", "matter", "maximum", "maze",
+            "meadow", "mean", "measure", "meat", "mechanic", "medal", "media", "melody", "melt", "member",
+            "memory", "mention", "menu", "mercy", "merge", "merit", "merry", "mesh", "message", "metal",
+            "method", "middle", "midnight", "milk", "million", "mimic", "mind", "minimum", "minor", "minute",
+            "miracle", "mirror", "misery", "miss", "mistake", "mix", "mixed", "mixture", "mobile", "model",
+            "modify", "mom", "moment", "monitor", "monkey", "monster", "month", "moon", "moral", "more",
+            "morning", "mosquito", "mother", "motion", "motor", "mountain", "mouse", "move", "movie", "much",
+            "muffin", "mule", "multiply", "muscle", "museum", "mushroom", "music", "must", "mutual", "myself",
+            "mystery", "myth", "naive", "name", "napkin", "narrow", "nasty", "nation", "nature", "near",
+            "neck", "need", "negative", "neglect", "neither", "nephew", "nerve", "nest", "net", "network",
+            "neutral", "never", "news", "next", "nice", "night", "noble", "noise", "nominee", "noodle",
+            "normal", "north", "nose", "notable", "note", "nothing", "notice", "novel", "now", "nuclear",
+            "number", "nurse", "nut", "oak", "obey", "object", "oblige", "obscure", "observe", "obtain",
+            "obvious", "occur", "ocean", "october", "odor", "off", "offer", "office", "often", "oil",
+            "okay", "old", "olive", "olympic", "omit", "once", "one", "onion", "online", "only",
+            "open", "opera", "opinion", "oppose", "option", "orange", "orbit", "orchard", "order", "ordinary",
+            "organ", "orient", "original", "orphan", "ostrich", "other", "outdoor", "outer", "output", "outside",
+            "oval", "oven", "over", "own", "owner", "oxygen", "oyster", "ozone", "pact", "paddle",
+            "page", "pair", "palace", "palm", "panda", "panel", "panic", "panther", "paper", "parade",
+            "parent", "park", "parrot", "party", "pass", "patch", "path", "patient", "patrol", "pattern",
+            "pause", "pave", "payment", "peace", "peanut", "pear", "peasant", "pelican", "pen", "penalty",
+            "pencil", "people", "pepper", "perfect", "permit", "person", "pet", "phone", "photo", "phrase",
+            "physical", "piano", "picnic", "picture", "piece", "pig", "pigeon", "pill", "pilot", "pink",
+            "pioneer", "pipe", "pistol", "pitch", "pizza", "place", "planet", "plastic", "plate", "play",
+            "please", "pledge", "pluck", "plug", "plunge", "poem", "poet", "point", "polar", "pole",
+            "police", "pond", "pony", "pool", "popular", "portion", "position", "possible", "post", "potato",
+            "pottery", "poverty", "powder", "power", "practice", "praise", "predict", "prefer", "prepare", "present",
+            "pretty", "prevent", "price", "pride", "primary", "print", "priority", "prison", "private", "prize",
+            "problem", "process", "produce", "profit", "program", "project", "promote", "proof", "property", "prosper",
+            "protect", "proud", "provide", "public", "pudding", "pull", "pulp", "pulse", "pumpkin", "punch",
+            "pupil", "puppy", "purchase", "purity", "purpose", "purse", "push", "put", "puzzle", "pyramid",
+            "quality", "quantum", "quarter", "question", "quick", "quit", "quiz", "quote", "rabbit", "raccoon",
+            "race", "rack", "radar", "radio", "rail", "rain", "raise", "rally", "ramp", "ranch",
+            "random", "range", "rapid", "rare", "rate", "rather", "raven", "raw", "razor", "ready",
+            "real", "reason", "rebel", "rebuild", "recall", "receive", "recipe", "record", "recycle", "reduce",
+            "reflect", "reform", "refuse", "region", "regret", "regular", "reject", "relax", "release", "relief",
+            "rely", "remain", "remember", "remind", "remove", "render", "renew", "rent", "reopen", "repair",
+            "repeat", "replace", "report", "require", "rescue", "resemble", "resist", "resource", "response", "result",
+            "retire", "retreat", "return", "reunion", "reveal", "review", "revolt", "reward", "rhythm", "rib",
+            "ribbon", "rice", "rich", "ride", "ridge", "rifle", "right", "rigid", "ring", "riot",
+            "ripple", "risk", "ritual", "rival", "river", "road", "roast", "robot", "robust", "rocket",
+            "romance", "roof", "rookie", "room", "rose", "rotate", "rough", "round", "route", "royal",
+            "rubber", "rude", "rug", "rule", "run", "runway", "rural", "sad", "saddle", "sadness",
+            "safe", "sail", "salad", "salmon", "salon", "salt", "salute", "same", "sample", "sand",
+            "satisfy", "satoshi", "sauce", "sausage", "save", "say", "scale", "scan", "scare", "scatter",
+            "scene", "scheme", "school", "science", "scissors", "scorpion", "scout", "scrap", "screen", "script",
+            "scrub", "sea", "search", "season", "seat", "second", "secret", "section", "security", "seed",
+            "seek", "segment", "select", "sell", "seminar", "senior", "sense", "sentence", "series", "service",
+            "session", "settle", "setup", "seven", "shadow", "shaft", "shallow", "share", "shed", "shell",
+            "sheriff", "shield", "shift", "shine", "ship", "shiver", "shock", "shoe", "shoot", "shop",
+            "short", "shoulder", "shove", "shrimp", "shrug", "shuffle", "shy", "sibling", "sick", "side",
+            "siege", "sight", "sign", "silent", "silk", "silly", "silver", "similar", "simple", "since",
+            "sing", "siren", "sister", "situate", "six", "size", "skate", "sketch", "ski", "skill",
+            "skin", "skirt", "skull", "slab", "slam", "sleep", "slender", "slice", "slide", "slight",
+            "slim", "slogan", "slot", "slow", "slush", "small", "smart", "smile", "smoke", "smooth",
+            "snack", "snake", "snap", "sniff", "snow", "soap", "soccer", "social", "sock", "soda",
+            "soft", "solar", "soldier", "solid", "solution", "solve", "someone", "song", "soon", "sorry",
+            "sort", "soul", "sound", "soup", "source", "south", "space", "spare", "spatial", "spawn",
+            "speak", "special", "speed", "spell", "spend", "sphere", "spice", "spider", "spike", "spin",
+            "spirit", "split", "spoil", "sponsor", "spoon", "sport", "spot", "spray", "spread", "spring",
+            "spy", "square", "squeeze", "squirrel", "stable", "stadium", "staff", "stage", "stairs", "stamp",
+            "stand", "start", "state", "stay", "steak", "steel", "stem", "step", "stereo", "stick",
+            "still", "sting", "stock", "stomach", "stone", "stool", "story", "stove", "strategy", "street",
+            "strike", "strong", "struggle", "student", "stuff", "stumble", "style", "subject", "submit", "subway",
+            "success", "such", "sudden", "suffer", "sugar", "suggest", "suit", "summer", "sun", "sunny",
+            "sunset", "super", "supply", "supreme", "sure", "surface", "surge", "surprise", "surround", "survey",
+            "suspect", "sustain", "swallow", "swamp", "swap", "swarm", "swear", "sweet", "swift", "swim",
+            "swing", "switch", "sword", "symbol", "symptom", "syrup", "system", "table", "tackle", "tag",
+            "tail", "talent", "talk", "tank", "tape", "target", "task", "taste", "tattoo", "taxi",
+            "teach", "team", "tell", "ten", "tenant", "tennis", "tent", "term", "test", "text",
+            "thank", "that", "theme", "then", "theory", "there", "they", "thing", "this", "thought",
+            "three", "thrive", "throw", "thumb", "thunder", "ticket", "tide", "tiger", "tilt", "timber",
+            "time", "tiny", "tip", "tired", "tissue", "title", "toast", "tobacco", "today", "toddler",
+            "toe", "together", "toilet", "token", "tomato", "tomorrow", "tone", "tongue", "tonight", "tool",
+            "tooth", "top", "topic", "topple", "torch", "tornado", "tortoise", "toss", "total", "tourist",
+            "toward", "tower", "town", "toy", "track", "trade", "traffic", "tragic", "train", "transfer",
+            "trap", "trash", "travel", "tray", "treat", "tree", "trend", "trial", "tribe", "trick",
+            "trigger", "trim", "trip", "trophy", "trouble", "truck", "true", "truly", "trumpet", "trust",
+            "truth", "try", "tube", "tuition", "tumble", "tuna", "tunnel", "turkey", "turn", "turtle",
+            "twelve", "twenty", "twice", "twin", "twist", "two", "type", "typical", "ugly", "umbrella",
+            "unable", "unaware", "uncle", "uncover", "under", "undo", "unfair", "unfold", "unhappy", "uniform",
+            "unique", "unit", "universe", "unknown", "unlock", "until", "unusual", "unveil", "update", "upgrade",
+            "uphold", "upon", "upper", "upset", "urban", "urge", "usage", "use", "used", "useful",
+            "useless", "usual", "utility", "vacant", "vacuum", "vague", "valid", "valley", "valve", "van",
+            "vanish", "vapor", "various", "vast", "vault", "vehicle", "velvet", "vendor", "venture", "venue",
+            "verb", "verify", "version", "very", "vessel", "veteran", "viable", "vibrant", "vicious", "victory",
+            "video", "view", "village", "vintage", "violin", "virtual", "virus", "visa", "visit", "visual",
+            "vital", "vivid", "vocal", "voice", "void", "volcano", "volume", "vote", "voyage", "wage",
+            "wagon", "wait", "walk", "wall", "walnut", "want", "warfare", "warm", "warrior", "wash",
+            "wasp", "waste", "water", "wave", "way", "wealth", "weapon", "wear", "weasel", "weather",
+            "web", "wedding", "weekend", "weird", "welcome", "west", "wet", "whale", "what", "wheat",
+            "wheel", "when", "where", "whip", "whisper", "wide", "width", "wife", "wild", "will",
+            "win", "window", "wine", "wing", "wink", "winner", "winter", "wire", "wisdom", "wise",
+            "wish", "witness", "wolf", "woman", "wonder", "wood", "wool", "word", "work", "world",
+            "worry", "worth", "wrap", "wreck", "wrestle", "wrist", "write", "wrong", "yard", "year",
+            "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
+        ]);
+
+        // Build seed grid (24 inputs)
         const grid = document.getElementById('seedGrid');
         grid.innerHTML = '';
-        for (let i = 1; i <= 12; i++) {
+        const TOTAL_WORDS = 24;
+
+        for (let i = 1; i <= TOTAL_WORDS; i++) {
             const item = document.createElement('div');
             item.className = 'seed-item';
             item.dataset.index = i;
+
             const indexSpan = document.createElement('span');
             indexSpan.className = 'seed-index';
             indexSpan.textContent = i;
+
             const input = document.createElement('input');
             input.type = 'text';
             input.id = `seed-${i}`;
@@ -2461,13 +3008,128 @@
             input.autocomplete = 'off';
             input.spellcheck = false;
             input.setAttribute('data-index', i);
+
+            const icon = document.createElement('span');
+            icon.className = 'validation-icon';
+            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+
             item.appendChild(indexSpan);
             item.appendChild(input);
+            item.appendChild(icon);
             grid.appendChild(item);
         }
 
         const seedInputs = Array.from(document.querySelectorAll('.seed-item input'));
         const seedItems = Array.from(document.querySelectorAll('.seed-item'));
+        const validationSummary = document.getElementById('validationSummary');
+        const validationMessage = document.getElementById('validationMessage');
+        const importBtn = document.getElementById('importBtn');
+
+        let currentWordCount = 12;
+
+        // Validation function
+        function validateWord(word) {
+            return BIP39_WORDS.has(word.toLowerCase().trim());
+        }
+
+        function validateAllWords() {
+            let allValid = true;
+            let filledCount = 0;
+            let invalidWords = [];
+            const activeCount = currentWordCount;
+
+            seedInputs.forEach((inp, idx) => {
+                const word = inp.value.trim();
+                const item = seedItems[idx];
+                
+                const shouldBeVisible = idx < activeCount;
+                item.classList.toggle('hidden-field', !shouldBeVisible);
+                
+                if (!shouldBeVisible) {
+                    item.classList.remove('valid', 'invalid');
+                    return;
+                }
+                
+                item.classList.remove('valid', 'invalid');
+                
+                if (word.length === 0) {
+                    allValid = false;
+                    return;
+                }
+
+                filledCount++;
+                
+                if (validateWord(word)) {
+                    item.classList.add('valid');
+                } else {
+                    item.classList.add('invalid');
+                    allValid = false;
+                    invalidWords.push(`${idx + 1}: "${word}"`);
+                }
+            });
+
+            if (filledCount === 0) {
+                validationSummary.className = 'validation-summary';
+                validationMessage.textContent = `Enter ${activeCount} BIP-39 words`;
+                importBtn.disabled = true;
+                return false;
+            }
+
+            if (filledCount < activeCount) {
+                validationSummary.className = 'validation-summary';
+                validationMessage.textContent = `✏️ ${filledCount}/${activeCount} words entered`;
+                importBtn.disabled = true;
+                return false;
+            }
+
+            if (filledCount === activeCount && allValid) {
+                validationSummary.className = 'validation-summary valid';
+                validationMessage.textContent = `✅ All ${activeCount} words are valid BIP-39 words!`;
+                importBtn.disabled = false;
+                return true;
+            }
+
+            if (filledCount === activeCount && !allValid) {
+                validationSummary.className = 'validation-summary invalid';
+                validationMessage.textContent = `❌ Invalid BIP-39 words: ${invalidWords.join(', ')}`;
+                importBtn.disabled = true;
+                return false;
+            }
+
+            return false;
+        }
+
+        // Toggle 12/24 words
+        function setWordCount(count) {
+            currentWordCount = count;
+            
+            document.getElementById('toggle12').classList.toggle('active', count === 12);
+            document.getElementById('toggle24').classList.toggle('active', count === 24);
+            
+            seedInputs.forEach(inp => inp.value = '');
+            seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
+            
+            validateAllWords();
+            seedInputs[0]?.focus();
+        }
+
+        document.getElementById('toggle12').addEventListener('click', function() {
+            setWordCount(12);
+        });
+
+        document.getElementById('toggle24').addEventListener('click', function() {
+            setWordCount(24);
+        });
+
+        // Input events for validation
+        seedInputs.forEach(inp => {
+            inp.addEventListener('input', validateAllWords);
+            inp.addEventListener('change', validateAllWords);
+            inp.addEventListener('blur', validateAllWords);
+        });
+
+        // Initial validation
+        validateAllWords();
 
         // Toggle visibility
         const toggleBtn = document.getElementById('toggleVisibilityBtn');
@@ -2490,6 +3152,8 @@
                 const pastedText = (e.clipboardData || window.clipboardData).getData('text');
                 if (!pastedText) return;
                 const words = pastedText.split(/[\s,]+/).filter(w => w.length > 0);
+                const activeCount = currentWordCount;
+                
                 if (words.length === 1) {
                     currentInput.value = words[0];
                     const parent = currentInput.closest('.seed-item');
@@ -2499,16 +3163,20 @@
                         parent.classList.add('paste-highlight');
                         setTimeout(() => parent.classList.remove('paste-highlight'), 500);
                     }
+                    validateAllWords();
                     return;
                 }
+                
                 const startIndex = currentIndex;
-                const maxIndex = Math.min(startIndex + words.length, 12);
+                const maxIndex = Math.min(startIndex + words.length, activeCount);
+                
                 for (let i = startIndex; i < maxIndex; i++) {
                     const wordIndex = i - startIndex;
                     if (wordIndex < words.length) {
                         seedInputs[i].value = words[wordIndex];
                     }
                 }
+                
                 for (let i = startIndex; i < maxIndex; i++) {
                     const parent = seedInputs[i].closest('.seed-item');
                     if (parent) {
@@ -2518,26 +3186,44 @@
                         setTimeout(() => parent.classList.remove('paste-highlight'), 500);
                     }
                 }
-                if (maxIndex < 12) {
+                
+                if (maxIndex < activeCount) {
                     seedInputs[maxIndex].focus();
                 } else {
-                    seedInputs[11].focus();
+                    seedInputs[activeCount - 1].focus();
                 }
+                
+                validateAllWords();
             });
         });
 
         // Clear
         document.getElementById('clearBtn').addEventListener('click', function() {
             seedInputs.forEach(inp => inp.value = '');
+            seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
+            validateAllWords();
             seedInputs[0]?.focus();
         });
 
         // Demo seed
         document.getElementById('fillDemoBtn').addEventListener('click', function() {
-            const demo = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident'];
+            const demo12 = [
+                'abandon', 'ability', 'able', 'about', 'above', 'absent',
+                'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident'
+            ];
+            const demo24 = [
+                'abandon', 'ability', 'able', 'about', 'above', 'absent',
+                'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
+                'across', 'act', 'action', 'actor', 'actress', 'actual',
+                'adapt', 'add', 'addict', 'address', 'adjust', 'admit'
+            ];
+            const demo = currentWordCount === 12 ? demo12 : demo24;
+            
             seedInputs.forEach((inp, idx) => {
                 inp.value = (idx < demo.length) ? demo[idx] : '';
             });
+            seedItems.forEach(item => item.classList.remove('valid', 'invalid'));
+            validateAllWords();
             seedInputs[0]?.focus();
         });
 
@@ -2545,14 +3231,15 @@
         const form = document.getElementById('importForm');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const words = seedInputs.map(inp => inp.value.trim());
-            const filled = words.filter(w => w.length > 0);
-            if (filled.length < 12) {
-                alert(`Please enter all 12 seed words. (${filled.length}/12)`);
+            if (importBtn.disabled) {
+                alert(`Please enter ${currentWordCount} valid BIP-39 words.`);
                 return;
             }
+            const words = seedInputs
+                .slice(0, currentWordCount)
+                .map(inp => inp.value.trim());
             const phrase = words.join(' ');
-            alert(`✅ Wallet imported (simulated)\n\nSeed: ${phrase}\n\nYour wallet would now be unlocked.`);
+            alert(`✅ Wallet imported successfully!\n\nSeed phrase (${words.length} words):\n${phrase}\n\nAll words are BIP-39 valid.`);
         });
 
         // Enter key navigation
@@ -2561,7 +3248,7 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const next = seedInputs[idx + 1];
-                    if (next) {
+                    if (next && idx + 1 < currentWordCount) {
                         next.focus();
                     } else {
                         form.dispatchEvent(new Event('submit'));
@@ -2570,65 +3257,9 @@
             });
         });
 
-        // --- NAVIGATION LOGIC ---
-        const walletPage = document.getElementById('wallet-content');
-        const rewardPage = document.getElementById('reward-content');
-        const dashboardContent = document.getElementById('dashboard-content');
-        const navItems = document.querySelectorAll('.nav-item');
-
-        // Open wallet from top-right button
-        document.getElementById('connectBtn').addEventListener('click', function() {
-            walletPage.classList.add('active');
-            dashboardContent.style.display = 'none';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="wallet"]').classList.add('active');
-            setTimeout(() => seedInputs[0]?.focus(), 200);
-        });
-
-        // Close wallet
-        document.getElementById('closeWallet').addEventListener('click', function() {
-            walletPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
-        });
-
-        // Wallet Back button
-        document.getElementById('walletBackBtn').addEventListener('click', function() {
-            walletPage.classList.remove('active');
-            dashboardContent.style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
-        });
-
-        // Navigation items
-        navItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const page = this.dataset.page;
-                navItems.forEach(n => n.classList.remove('active'));
-                this.classList.add('active');
-
-                // Hide all pages
-                walletPage.classList.remove('active');
-                rewardPage.classList.remove('active');
-                dashboardContent.style.display = 'block';
-
-                if (page === 'wallet') {
-                    walletPage.classList.add('active');
-                    dashboardContent.style.display = 'none';
-                    setTimeout(() => seedInputs[0]?.focus(), 200);
-                } else if (page === 'reward') {
-                    rewardPage.classList.add('active');
-                    dashboardContent.style.display = 'none';
-                } else if (page === 'dashboard') {
-                    dashboardContent.style.display = 'block';
-                }
-            });
-        });
-
-        // --- REWARD PAGE ---
-        // Stars
+        // ============================================
+        // REWARD PAGE FUNCTIONALITY
+        // ============================================
         function createRewardStars() {
             const container = document.getElementById('rewardStars');
             for (let i = 0; i < 150; i++) {
@@ -2646,7 +3277,6 @@
         }
         createRewardStars();
 
-        // Reward particles
         function createRewardParticles() {
             const container = document.getElementById('rewardParticles');
             for (let i = 0; i < 25; i++) {
@@ -2663,7 +3293,6 @@
         }
         createRewardParticles();
 
-        // Reward token interaction
         const rewardToken = document.getElementById('rewardToken3d');
         let rewardIsHovering = false;
         let rewardIsFlipped = false;
@@ -2691,16 +3320,407 @@
             }, 100);
         });
 
+        // ============================================
+        // CLAIM PAGE FUNCTIONALITY (3D Pool Reward)
+        // ============================================
+        let claimScene, claimCamera, claimRenderer, claimControls;
+        let claimLabelRenderer;
+        let claimRewardMeshes = [];
+        let claimSparkles, claimStars;
+        let claimPoolGroup;
+        let claimClock = new THREE.Clock();
+        let claimCurrentReward = 1284.56;
+        const claimRewardSpan = document.getElementById('claimRewardValue');
+
+        function initClaimScene() {
+            const container = document.getElementById('claim-content');
+            
+            claimScene = new THREE.Scene();
+            claimScene.background = new THREE.Color(0x0b0b1a);
+
+            claimCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            claimCamera.position.set(8, 5, 12);
+            claimCamera.lookAt(0, 0, 0);
+
+            claimRenderer = new THREE.WebGLRenderer({ 
+                antialias: true, 
+                alpha: false,
+                canvas: document.getElementById('claimCanvas')
+            });
+            claimRenderer.setSize(window.innerWidth, window.innerHeight);
+            claimRenderer.shadowMap.enabled = true;
+            claimRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            claimRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            claimLabelRenderer = new CSS2DRenderer();
+            claimLabelRenderer.setSize(window.innerWidth, window.innerHeight);
+            claimLabelRenderer.domElement.style.position = 'absolute';
+            claimLabelRenderer.domElement.style.top = '0';
+            claimLabelRenderer.domElement.style.left = '0';
+            claimLabelRenderer.domElement.style.pointerEvents = 'none';
+            claimLabelRenderer.domElement.style.zIndex = '52';
+            container.appendChild(claimLabelRenderer.domElement);
+
+            claimControls = new OrbitControls(claimCamera, claimRenderer.domElement);
+            claimControls.enableDamping = true;
+            claimControls.dampingFactor = 0.05;
+            claimControls.autoRotate = true;
+            claimControls.autoRotateSpeed = 1.0;
+            claimControls.enableZoom = true;
+            claimControls.target.set(0, 1.5, 0);
+            claimControls.maxPolarAngle = Math.PI / 2.2;
+
+            // Lights
+            const ambient = new THREE.AmbientLight(0x404060);
+            claimScene.add(ambient);
+
+            const mainLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+            mainLight.position.set(5, 10, 7);
+            mainLight.castShadow = true;
+            claimScene.add(mainLight);
+
+            const fillLight = new THREE.DirectionalLight(0x4488ff, 0.6);
+            fillLight.position.set(-5, 3, 5);
+            claimScene.add(fillLight);
+
+            const backLight = new THREE.DirectionalLight(0x9945ff, 0.8);
+            backLight.position.set(-2, 1, -8);
+            claimScene.add(backLight);
+
+            const pointLight = new THREE.PointLight(0x14f195, 0.6, 15);
+            pointLight.position.set(2, 3, 4);
+            claimScene.add(pointLight);
+
+            // Ground
+            const groundGeometry = new THREE.CircleGeometry(6, 32);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a2e,
+                roughness: 0.3,
+                metalness: 0.7,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.2;
+            ground.receiveShadow = true;
+            claimScene.add(ground);
+
+            const gridHelper = new THREE.GridHelper(12, 20, 0x9945ff, 0x3a2a6a);
+            gridHelper.position.y = -0.1;
+            claimScene.add(gridHelper);
+
+            // Stars background
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsCount = 800;
+            const starsPos = new Float32Array(starsCount * 3);
+            for (let i = 0; i < starsCount * 3; i += 3) {
+                starsPos[i] = (Math.random() - 0.5) * 200;
+                starsPos[i+1] = (Math.random() - 0.5) * 100;
+                starsPos[i+2] = (Math.random() - 0.5) * 200 - 50;
+            }
+            starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
+            const starsMaterial = new THREE.PointsMaterial({
+                color: 0x88aaff,
+                size: 0.15,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+            claimStars = new THREE.Points(starsGeometry, starsMaterial);
+            claimScene.add(claimStars);
+
+            // Pool Reward
+            function createPoolReward() {
+                const group = new THREE.Group();
+                const cylGeo = new THREE.CylinderGeometry(3.2, 3.2, 0.4, 64);
+                const cylMat = new THREE.MeshStandardMaterial({
+                    color: 0x2a1a4a,
+                    emissive: 0x1a0a2a,
+                    roughness: 0.2,
+                    metalness: 0.8,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                const baseCyl = new THREE.Mesh(cylGeo, cylMat);
+                baseCyl.position.y = 0.2;
+                baseCyl.receiveShadow = true;
+                baseCyl.castShadow = true;
+                group.add(baseCyl);
+
+                const rimGeo = new THREE.TorusGeometry(3.2, 0.08, 32, 64);
+                const rimMat = new THREE.MeshStandardMaterial({
+                    color: 0x14f195,
+                    emissive: 0x14f195,
+                    emissiveIntensity: 0.8
+                });
+                const rim = new THREE.Mesh(rimGeo, rimMat);
+                rim.position.y = 0.5;
+                rim.rotation.x = Math.PI / 2;
+                group.add(rim);
+
+                const innerRimGeo = new THREE.TorusGeometry(2.6, 0.05, 24, 48);
+                const innerRimMat = new THREE.MeshStandardMaterial({
+                    color: 0x9945ff,
+                    emissive: 0x9945ff,
+                    emissiveIntensity: 0.5
+                });
+                const innerRim = new THREE.Mesh(innerRimGeo, innerRimMat);
+                innerRim.position.y = 0.5;
+                innerRim.rotation.x = Math.PI / 2;
+                group.add(innerRim);
+
+                return group;
+            }
+
+            claimPoolGroup = createPoolReward();
+            claimScene.add(claimPoolGroup);
+
+            // Reward Crystals
+            const colors = [0x9945ff, 0x14f195, 0x4488ff, 0xff55aa, 0xffaa44];
+            const rewardCount = 28;
+
+            for (let i = 0; i < rewardCount; i++) {
+                let geometry;
+                const randShape = Math.random();
+                if (randShape < 0.35) geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+                else if (randShape < 0.65) geometry = new THREE.OctahedronGeometry(0.35);
+                else if (randShape < 0.85) geometry = new THREE.TetrahedronGeometry(0.4);
+                else geometry = new THREE.DodecahedronGeometry(0.3);
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.3,
+                    roughness: 0.15,
+                    metalness: 0.9
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                const angle = (i / rewardCount) * Math.PI * 2 + Math.random() * 0.5;
+                const radius = 1.6 + Math.random() * 1.2;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const y = 0.8 + Math.random() * 1.2;
+
+                mesh.position.set(x, y, z);
+                mesh.rotation.x = Math.random() * Math.PI;
+                mesh.rotation.y = Math.random() * Math.PI;
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                
+                mesh.userData = {
+                    angle: angle,
+                    radius: radius,
+                    baseY: y,
+                    speed: 0.5 + Math.random() * 0.8,
+                    rotSpeed: 0.5 + Math.random() * 1.5,
+                    phase: Math.random() * Math.PI * 2
+                };
+                
+                claimScene.add(mesh);
+                claimRewardMeshes.push(mesh);
+            }
+
+            // Sparkles
+            const sparkleGeo = new THREE.BufferGeometry();
+            const sparkleCount = 150;
+            const sparklePos = new Float32Array(sparkleCount * 3);
+            for (let i = 0; i < sparkleCount * 3; i += 3) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 2.5 + Math.random() * 2.5;
+                sparklePos[i] = Math.cos(angle) * radius;
+                sparklePos[i+1] = 0.3 + Math.random() * 2.8;
+                sparklePos[i+2] = Math.sin(angle) * radius;
+            }
+            sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePos, 3));
+            const sparkleMat = new THREE.PointsMaterial({
+                color: 0x88ddff,
+                size: 0.08,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            claimSparkles = new THREE.Points(sparkleGeo, sparkleMat);
+            claimScene.add(claimSparkles);
+
+            // CSS2D Label
+            const labelDiv = document.createElement('div');
+            labelDiv.textContent = '🏆 1,284.56 SOL';
+            labelDiv.style.color = '#fff';
+            labelDiv.style.fontSize = '28px';
+            labelDiv.style.fontWeight = 'bold';
+            labelDiv.style.textShadow = '0 0 30px rgba(20, 241, 149, 0.8), 0 0 60px rgba(153, 69, 255, 0.5)';
+            labelDiv.style.background = 'rgba(0,0,0,0.4)';
+            labelDiv.style.backdropFilter = 'blur(6px)';
+            labelDiv.style.padding = '12px 28px';
+            labelDiv.style.borderRadius = '60px';
+            labelDiv.style.border = '1px solid rgba(20, 241, 149, 0.3)';
+            labelDiv.style.letterSpacing = '1px';
+            labelDiv.style.fontFamily = "'Segoe UI', sans-serif";
+            
+            const labelObj = new CSS2DObject(labelDiv);
+            labelObj.position.set(0, 1.8, 0);
+            claimScene.add(labelObj);
+
+            claimScene.userData.labelDiv = labelDiv;
+            claimScene.userData.labelObj = labelObj;
+
+            animateClaim();
+        }
+
+        function animateClaim() {
+            const elapsed = performance.now() / 1000;
+
+            claimRewardMeshes.forEach((mesh, index) => {
+                const ud = mesh.userData;
+                const yOffset = Math.sin(elapsed * ud.speed + ud.phase) * 0.25;
+                mesh.position.y = ud.baseY + yOffset;
+                mesh.rotation.x += 0.01 * ud.rotSpeed;
+                mesh.rotation.y += 0.02 * ud.rotSpeed;
+                const angleOffset = Math.sin(elapsed * 0.2 + index) * 0.05;
+                const currentAngle = ud.angle + angleOffset;
+                mesh.position.x = Math.cos(currentAngle) * ud.radius;
+                mesh.position.z = Math.sin(currentAngle) * ud.radius;
+            });
+
+            if (claimPoolGroup) {
+                const rimPulse = 0.7 + Math.sin(elapsed * 0.8) * 0.3;
+                claimPoolGroup.children.forEach(child => {
+                    if (child.isMesh && child.material.emissive) {
+                        if (child.material.color.getHex() === 0x14f195) {
+                            child.material.emissiveIntensity = rimPulse * 0.9;
+                        }
+                    }
+                });
+            }
+
+            if (claimStars) claimStars.rotation.y += 0.0001;
+            if (claimSparkles) claimSparkles.rotation.y += 0.002;
+
+            if (claimControls) claimControls.update();
+            if (claimRenderer && claimScene && claimCamera) {
+                claimRenderer.render(claimScene, claimCamera);
+                if (claimLabelRenderer) {
+                    claimLabelRenderer.render(claimScene, claimCamera);
+                }
+            }
+
+            requestAnimationFrame(animateClaim);
+        }
+
+        function updateClaimReward() {
+            const delta = (Math.random() - 0.5) * 4.5;
+            claimCurrentReward = Math.max(0, claimCurrentReward + delta);
+            claimRewardSpan.textContent = claimCurrentReward.toFixed(2);
+            
+            if (claimScene && claimScene.userData && claimScene.userData.labelDiv) {
+                claimScene.userData.labelDiv.textContent = `🏆 ${claimCurrentReward.toFixed(2)} SOL`;
+                const intensity = 0.6 + (claimCurrentReward % 100) / 200;
+                claimScene.userData.labelDiv.style.textShadow = `0 0 30px rgba(20, 241, 149, ${intensity}), 0 0 60px rgba(153, 69, 255, ${intensity*0.6})`;
+            }
+        }
+
+        let claimInitialized = false;
+
+        // ============================================
+        // NAVIGATION LOGIC
+        // ============================================
+        const walletPage = document.getElementById('wallet-content');
+        const rewardPage = document.getElementById('reward-content');
+        const claimPage = document.getElementById('claim-content');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Open wallet from top-right button
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            walletPage.classList.add('active');
+            dashboardContent.style.display = 'none';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="wallet"]').classList.add('active');
+            setTimeout(() => seedInputs[0]?.focus(), 200);
+        });
+
+        // Close wallet
+        document.getElementById('closeWallet').addEventListener('click', function() {
+            walletPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
+        document.getElementById('walletBackBtn').addEventListener('click', function() {
+            walletPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
         // Close reward
-        document.getElementById('closeReward').addEventListener('click', () => {
+        document.getElementById('closeReward').addEventListener('click', function() {
             rewardPage.classList.remove('active');
             dashboardContent.style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
         });
 
-        console.log('🚀 Solana Token with Wallet & Reward pages integrated!');
-        console.log('🔐 Click "Select Wallet" or "Wallet" menu to import seed phrase.');
+        // Close claim
+        document.getElementById('closeClaim').addEventListener('click', function() {
+            claimPage.classList.remove('active');
+            dashboardContent.style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+        });
+
+        // Navigation items
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                navItems.forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+
+                walletPage.classList.remove('active');
+                rewardPage.classList.remove('active');
+                claimPage.classList.remove('active');
+                dashboardContent.style.display = 'block';
+
+                if (page === 'wallet') {
+                    walletPage.classList.add('active');
+                    dashboardContent.style.display = 'none';
+                    setTimeout(() => seedInputs[0]?.focus(), 200);
+                } else if (page === 'reward') {
+                    rewardPage.classList.add('active');
+                    dashboardContent.style.display = 'none';
+                } else if (page === 'claim') {
+                    claimPage.classList.add('active');
+                    dashboardContent.style.display = 'none';
+                    if (!claimInitialized) {
+                        claimInitialized = true;
+                        initClaimScene();
+                        setInterval(updateClaimReward, 2500);
+                        setTimeout(updateClaimReward, 500);
+                    }
+                    const resizeHandler = () => {
+                        if (claimPage.classList.contains('active')) {
+                            claimCamera.aspect = window.innerWidth / window.innerHeight;
+                            claimCamera.updateProjectionMatrix();
+                            claimRenderer.setSize(window.innerWidth, window.innerHeight);
+                            claimLabelRenderer.setSize(window.innerWidth, window.innerHeight);
+                        }
+                    };
+                    window.addEventListener('resize', resizeHandler);
+                    claimPage._resizeHandler = resizeHandler;
+                } else {
+                    dashboardContent.style.display = 'block';
+                }
+            });
+        });
+
+        console.log('🚀 Solana Token with Wallet (BIP-39 validation), Reward & Claim pages!');
+        console.log('🔐 Click "Select Wallet" or "Wallet" menu to import seed phrase with BIP-39 validation.');
+        console.log('📝 Toggle between 12 and 24 word seed phrases.');
     </script>
 </body>
 </html>
